@@ -565,22 +565,22 @@ All colors MUST be HSL.
 
   .grid-overlay::before {
     content: '';
-    position: absolute;
+    position: fixed;
     inset: 0;
     background:
       repeating-linear-gradient(
         0deg,
         transparent,
         transparent 50px,
-        hsl(181 69% 44% / 0.03) 50px,
-        hsl(181 69% 44% / 0.03) 51px
+        hsl(181 69% 44% / 0.08) 50px,
+        hsl(181 69% 44% / 0.08) 51px
       ),
       repeating-linear-gradient(
         90deg,
         transparent,
         transparent 50px,
-        hsl(181 69% 44% / 0.03) 50px,
-        hsl(181 69% 44% / 0.03) 51px
+        hsl(181 69% 44% / 0.08) 50px,
+        hsl(181 69% 44% / 0.08) 51px
       );
     pointer-events: none;
     z-index: 1;

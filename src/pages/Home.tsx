@@ -3,7 +3,7 @@ import GradientText from "@/components/text/GradientText";
 
 const Home = () => {
   return (
-    <div className="relative min-h-full flex items-center justify-center overflow-hidden grid-overlay">
+    <div className="relative min-h-full flex items-center justify-center overflow-hidden">
       {/* Liquid Ether Background */}
       <div className="absolute inset-0">
         <LiquidEther

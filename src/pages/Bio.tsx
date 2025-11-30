@@ -22,21 +22,13 @@ const Bio = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-14 text-left">
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-
-            <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Naq Evius è il nome iniziatico di Alessio Salvati. Autore di narrativa e musica, nasce a Roma nel 1988. Da sempre affascinato dall'arte, prova a farne parte fin dall'adolescenza, con risultati miseri. Nel mezzo della crisi di mezza età decide che le sue idee non possono
             </p>
           </div>
 
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            </p>
-
-            <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              restare in un cassetto e torna a esercitare sia musica che scrittura, puntando sull'autoproduzione e la diffusione delle sue opere sfruttando qualcosa che prima non aveva: i social network e nuovi capaci collaboratori.
             </p>
           </div>
         </div>
@@ -48,21 +40,13 @@ const Bio = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-14 text-left">
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
-            </p>
-
-            <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+              Ai Custodi delle Ceneri è una saga Sci-Fi di ampio respiro, contaminata da vari sottogeneri e stili. Corale, pulp, moderna, con un worldbuilding dettagliato e realistico. L'elaborazione dell'universo narrativo ha richiesto più di vent'anni di tentativi e riscritture, fino ad
             </p>
           </div>
 
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
-            </p>
-
-            <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.
+              arrivare alla forma attuale. Tutti i racconti sono collegati da dettagli più o meno nascosti e tutti fungono da preludio al romanzo che costituirà il cuore della storia.
             </p>
           </div>
         </div>

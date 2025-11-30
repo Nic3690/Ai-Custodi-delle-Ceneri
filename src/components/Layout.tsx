@@ -26,14 +26,14 @@ export const Layout = ({ children }: LayoutProps) => {
         <Navigation />
 
         <div className="flex-1 flex flex-col">
-          <header className="h-20 border-b border-primary/50 flex items-center px-8 bg-background">
+          <header className="h-20 border-b border-primary/50 flex items-center px-8 bg-background relative z-10">
             <SidebarTrigger />
             <div className="ml-4">
               <span className="text-sm font-mono text-primary">// {currentPage}</span>
             </div>
           </header>
 
-          <main className="flex-1 overflow-auto">
+          <main className={`flex-1 overflow-auto ${location.pathname !== "/" ? "grid-overlay" : ""}`}>
             {children}
           </main>
         </div>
