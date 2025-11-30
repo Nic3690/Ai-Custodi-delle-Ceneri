@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        mono: ['"Space Mono"', 'monospace'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -75,6 +78,11 @@ export default {
             height: "0",
           },
         },
+        "gradient": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -87,6 +95,7 @@ export default {
         "flicker": "flicker 1s ease-in-out infinite",
         "rgb-split": "rgb-split 3s infinite",
         "distort": "distort 3s ease-in-out infinite",
+        "gradient": "gradient 8s linear infinite",
       },
     },
   },

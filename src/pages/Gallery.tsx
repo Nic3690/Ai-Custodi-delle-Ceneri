@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, User } from "lucide-react";
+import GradientText from "@/components/text/GradientText";
 
 const artworks = [
   {
@@ -62,51 +63,57 @@ const artworks = [
 
 const Gallery = () => {
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-4 py-12 md:py-32">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center hologram">
-          <span className="neon-text">GALLERY</span>
-        </h1>
-        
+        <div className="text-center mb-6">
+          <GradientText
+            className="text-4xl md:text-6xl font-bold uppercase tracking-widest"
+            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+            animationSpeed={6}
+            style={{ fontFamily: "'Equinox', sans-serif" }}
+          >
+            GALLERIA
+          </GradientText>
+        </div>
+
         <p className="text-center text-muted-foreground mb-12 text-lg">
-          Visual interpretations of dystopian worlds by talented artists. Click to visit their channels.
+          Interpretazioni visive dei mondi distopici da artisti talentuosi.
         </p>
-        
+
         <div className="space-y-12">
           {artworks.map((storyArt, storyIndex) => (
             <div key={storyIndex}>
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary font-mono border-l-4 border-primary pl-4">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary border-l-4 border-primary pl-4">
                 {storyArt.story}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {storyArt.pieces.map((piece, pieceIndex) => (
                   <Card
                     key={pieceIndex}
-                    className="cyber-glow bg-card border-border hover:border-secondary transition-all duration-300 hover:scale-105 group"
+                    className="bg-card border-border hover:border-primary transition-all duration-300 group"
                   >
-                    {/* Placeholder for artwork image */}
-                    <div className="h-64 bg-gradient-to-br from-primary/20 to-secondary/20 border-b border-border flex items-center justify-center">
+                    <div className="h-64 bg-muted border-b border-border flex items-center justify-center">
                       <p className="text-muted-foreground font-mono text-sm">
-                        // ARTWORK_PLACEHOLDER
+                        Artwork Placeholder
                       </p>
                     </div>
-                    
+
                     <CardHeader>
-                      <CardTitle className="text-xl font-bold group-hover:text-secondary transition-colors">
+                      <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
                         {piece.title}
                       </CardTitle>
                       <CardDescription>
                         {piece.description}
                       </CardDescription>
                     </CardHeader>
-                    
+
                     <CardContent>
                       <a
                         href={piece.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:text-secondary transition-colors font-mono"
+                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
                       >
                         <User className="h-4 w-4" />
                         <span>{piece.artist}</span>
@@ -119,13 +126,13 @@ const Gallery = () => {
             </div>
           ))}
         </div>
-        
-        <div className="mt-16 text-center cyber-glow bg-card p-8 rounded-lg">
+
+        <div className="mt-16 text-center p-8">
           <p className="text-lg text-card-foreground mb-4">
-            Want to contribute artwork for these stories?
+            Vuoi contribuire con le tue opere?
           </p>
-          <p className="text-primary font-mono">
-            &gt; contact_for_collaboration()
+          <p className="text-primary">
+            Contattami per collaborare
           </p>
         </div>
       </div>

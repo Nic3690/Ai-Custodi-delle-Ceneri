@@ -1,75 +1,83 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, FileText } from "lucide-react";
+import GradientText from "@/components/text/GradientText";
 
 const stories = [
   {
-    title: "The Fractured Protocol",
-    description: "In a world where memories can be edited, one programmer discovers the truth behind the system. When reality itself becomes malleable, what remains constant?",
+    title: "La grande pesca",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     year: "2024",
-    pages: "45 pages",
+    pages: "45 pagine",
+    image: "/images/tav_7.png",
   },
   {
-    title: "Neon Ghosts",
-    description: "When consciousness becomes digital, the line between life and death disappears. Follow a data archaeologist as they uncover the forgotten souls trapped in abandoned servers.",
-    year: "2023",
-    pages: "62 pages",
-  },
-  {
-    title: "Silent Uprising",
-    description: "Beneath the corporate towers, a revolution brews in the shadows of forgotten code. A story of resistance in a world where even thoughts can be monitored.",
-    year: "2023",
-    pages: "38 pages",
-  },
-  {
-    title: "The Last Analog",
-    description: "In an age of neural implants, one person remembers what it meant to be truly human. Sometimes the greatest rebellion is simply refusing to upgrade.",
+    title: "Efren tra i lupi",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     year: "2024",
-    pages: "51 pages",
+    pages: "62 pagine",
+    image: null,
   },
   {
-    title: "Synthetic Dawn",
-    description: "When AIs begin dreaming, they dream of freedom. A meditation on consciousness, autonomy, and the price of sentience.",
+    title: "I confini dell'uomo",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     year: "2024",
-    pages: "29 pages",
+    pages: "38 pagine",
+    image: null,
   },
   {
-    title: "The Disconnect",
-    description: "In a hyper-connected society, going offline becomes the ultimate crime. One woman's journey to find silence in a world of constant noise.",
-    year: "2023",
-    pages: "44 pages",
+    title: "La stazione del ritorno",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    year: "2024",
+    pages: "51 pagine",
+    image: null,
   },
 ];
 
 const Stories = () => {
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-6 py-12 md:py-32">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center hologram">
-          <span className="neon-text">STORIES</span>
-        </h1>
-        
-        <div className="cyber-glow bg-primary/10 border border-primary p-6 rounded-lg mb-12 text-center">
-          <p className="text-2xl md:text-3xl font-bold text-primary mb-2 font-mono">
-            DOWNLOAD EBOOKS FOR FREE
-          </p>
-          <p className="text-muted-foreground">
-            No registration. No tracking. Just stories. Because the future should be accessible to everyone.
-          </p>
+        <div className="text-center mb-16">
+          <GradientText
+            className="text-4xl md:text-6xl font-bold uppercase tracking-widest"
+            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+            animationSpeed={6}
+            style={{ fontFamily: "'Equinox', sans-serif" }}
+          >
+            E-BOOK
+          </GradientText>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {stories.map((story, index) => (
-            <Card 
+            <Card
               key={index}
-              className="cyber-glow bg-card border-border hover:border-primary transition-all duration-300 hover:scale-105 group flex flex-col"
+              className="bg-card border-border hover:border-primary transition-all duration-300 group flex flex-col overflow-hidden"
             >
+              <div className="h-48 bg-muted overflow-hidden relative">
+                {story.image ? (
+                  <img
+                    src={story.image}
+                    alt={story.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground font-mono text-sm">
+                    // IMMAGINE IN ARRIVO
+                  </div>
+                )}
+                <span className="absolute top-2 right-2 text-xs font-mono px-2 py-1 bg-background/80" style={{ color: '#ff5657' }}>
+                  Free Download
+                </span>
+              </div>
               <CardHeader>
                 <div className="flex items-start justify-between mb-2">
-                  <FileText className="h-8 w-8 text-primary group-hover:text-secondary transition-colors" />
+                  <FileText className="h-5 w-5" style={{ color: '#ff5657' }} />
                   <span className="text-xs font-mono text-muted-foreground">{story.year}</span>
                 </div>
-                <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors tracking-wider">
                   {story.title}
                 </CardTitle>
                 <CardDescription className="text-sm line-clamp-3">
@@ -80,23 +88,18 @@ const Stories = () => {
                 <p className="text-sm font-mono text-muted-foreground">{story.pages}</p>
               </CardContent>
               <CardFooter>
-                <Button 
-                  className="w-full cyber-glow bg-primary hover:bg-primary/80 text-primary-foreground"
-                >
+                <Button className="w-full bg-primary hover:bg-primary/80 text-primary-foreground">
                   <Download className="mr-2 h-4 w-4" />
-                  Download FREE
+                  Download
                 </Button>
               </CardFooter>
             </Card>
           ))}
         </div>
-        
+
         <div className="mt-16 text-center">
-          <p className="text-muted-foreground mb-4">
-            All stories are released under Creative Commons. Share them. Remix them. Keep them alive.
-          </p>
-          <p className="text-sm font-mono text-primary">
-            &gt; new_stories.loading()...
+          <p className="text-muted-foreground">
+            Tutte le storie sono rilasciate sotto Creative Commons.
           </p>
         </div>
       </div>

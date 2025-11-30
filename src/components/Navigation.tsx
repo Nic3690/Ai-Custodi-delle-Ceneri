@@ -1,4 +1,4 @@
-import { Home, User, BookOpen, Lock, Image, Mail } from "lucide-react";
+import { Orbit, Fingerprint, ScrollText, Lock, Aperture, Radio } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "Home", url: "/", icon: Home },
-  { title: "Bio", url: "/bio", icon: User },
-  { title: "Stories", url: "/stories", icon: BookOpen },
+  { title: "Home", url: "/", icon: Orbit },
+  { title: "Bio", url: "/bio", icon: Fingerprint },
+  { title: "E-Book", url: "/stories", icon: ScrollText },
   { title: "???", url: "/secret", icon: Lock },
-  { title: "Gallery", url: "/gallery", icon: Image },
-  { title: "Contacts", url: "/contacts", icon: Mail },
+  { title: "Galleria", url: "/gallery", icon: Aperture },
+  { title: "Contatti", url: "/contacts", icon: Radio },
 ];
 
 export function Navigation() {
@@ -25,10 +25,10 @@ export function Navigation() {
 
   return (
     <Sidebar className={open ? "w-64" : "w-16"} collapsible="icon">
-      <SidebarContent className="bg-darker-bg border-r border-primary/30">
-        <div className="p-4 border-b border-primary/30">
-          <h2 className={`font-bold neon-text font-mono transition-all ${open ? "text-lg" : "text-xs"}`}>
-            {open ? "NAQ EVIUS" : "NE"}
+      <SidebarContent className="bg-background border-r border-primary/30">
+        <div className="p-6 border-b border-primary/30">
+          <h2 className={`font-bold text-primary transition-all ${open ? "text-lg" : "text-xs"}`} style={{ fontFamily: "'Equinox', sans-serif" }}>
+            {open ? "ACDC" : "A"}
           </h2>
         </div>
         
@@ -36,20 +36,20 @@ export function Navigation() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className="border-b border-primary/30 py-4">
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
                       end
-                      className={`hover:bg-primary/10 transition-all ${
-                        item.url === "/secret" ? "glitch" : ""
-                      }`}
-                      activeClassName="bg-primary/20 text-primary font-medium cyber-glow"
-                      data-text={item.url === "/secret" ? "???" : undefined}
+                      className="transition-all rounded-none scan-hover"
+                      activeClassName=""
                     >
-                      <item.icon className="h-5 w-5" />
+                      <item.icon
+                        className={`h-5 w-5 ${item.url === "/secret" ? "icon-glitch" : ""}`}
+                        style={{ color: '#ff5657' }}
+                      />
                       {open && (
-                        <span className={item.url === "/secret" ? "font-mono" : ""}>
+                        <span className="text-foreground menu-glitch-hover font-mono">
                           {item.title}
                         </span>
                       )}

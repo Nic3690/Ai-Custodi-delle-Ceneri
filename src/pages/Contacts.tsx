@@ -1,75 +1,82 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, MessageSquare, Github, Twitter, Instagram, Rss } from "lucide-react";
+import GradientText from "@/components/text/GradientText";
 
 const contactMethods = [
   {
     icon: Mail,
     title: "Email",
-    value: "naq.evius@dystopian.net",
-    link: "mailto:naq.evius@dystopian.net",
-    description: "For serious inquiries, collaborations, or just to say hello",
+    value: "email@example.com",
+    link: "mailto:email@example.com",
+    description: "Per richieste, collaborazioni o semplicemente per salutare",
   },
   {
     icon: Twitter,
     title: "Twitter / X",
-    value: "@naqevius",
-    link: "https://twitter.com/naqevius",
-    description: "Short bursts of dystopian thoughts and story updates",
+    value: "@username",
+    link: "https://twitter.com/username",
+    description: "Aggiornamenti e pensieri brevi",
   },
   {
     icon: Instagram,
     title: "Instagram",
-    value: "@naqevius",
-    link: "https://instagram.com/naqevius",
-    description: "Visual fragments from dystopian worlds",
+    value: "@username",
+    link: "https://instagram.com/username",
+    description: "Frammenti visivi dai mondi distopici",
   },
   {
     icon: Github,
     title: "GitHub",
-    value: "github.com/naqevius",
-    link: "https://github.com/naqevius",
-    description: "Open source tools and story resources",
+    value: "github.com/username",
+    link: "https://github.com/username",
+    description: "Risorse e strumenti open source",
   },
   {
     icon: MessageSquare,
     title: "Discord",
-    value: "Dystopian Chronicles Server",
-    link: "https://discord.gg/dystopian",
-    description: "Join the community, discuss stories, share theories",
+    value: "Server Discord",
+    link: "https://discord.gg/example",
+    description: "Unisciti alla community",
   },
   {
     icon: Rss,
     title: "Newsletter",
-    value: "Subscribe for updates",
+    value: "Iscriviti per aggiornamenti",
     link: "#newsletter",
-    description: "Monthly updates on new stories and the novel progress",
+    description: "Aggiornamenti mensili sulle nuove storie",
   },
 ];
 
 const Contacts = () => {
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-4 py-12 md:py-32">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center hologram">
-          <span className="neon-text">CONTACTS</span>
-        </h1>
-        
+        <div className="text-center mb-6">
+          <GradientText
+            className="text-4xl md:text-6xl font-bold uppercase tracking-widest"
+            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+            animationSpeed={6}
+            style={{ fontFamily: "'Equinox', sans-serif" }}
+          >
+            CONTATTI
+          </GradientText>
+        </div>
+
         <p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
-          Connect with me across various platforms. Whether you want to discuss stories, 
-          collaborate on projects, or just share your thoughts about dystopian futures.
+          Connettiti con me attraverso varie piattaforme.
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {contactMethods.map((contact, index) => {
             const Icon = contact.icon;
             return (
               <Card
                 key={index}
-                className="cyber-glow bg-card border-border hover:border-primary transition-all duration-300 hover:scale-105 group"
+                className="bg-card border-border hover:border-primary transition-all duration-300 group"
               >
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-2">
-                    <Icon className="h-8 w-8 text-primary group-hover:text-secondary transition-colors" />
+                    <Icon className="h-8 w-8" style={{ color: '#ff5657' }} />
                     <CardTitle className="text-xl font-bold">
                       {contact.title}
                     </CardTitle>
@@ -82,7 +89,7 @@ const Contacts = () => {
                     rel="noopener noreferrer"
                     className="block mb-3"
                   >
-                    <p className="text-lg font-mono text-primary hover:text-secondary transition-colors">
+                    <p className="text-lg text-primary hover:text-primary/80 transition-colors">
                       {contact.value}
                     </p>
                   </a>
@@ -94,31 +101,21 @@ const Contacts = () => {
             );
           })}
         </div>
-        
-        <div className="cyber-glow bg-card p-8 md:p-12 rounded-lg text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary font-mono">
-            ENCRYPTED_TRANSMISSION
+
+        <div className="p-8 md:p-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary">
+            Scrivimi
           </h2>
-          
+
           <p className="text-lg leading-relaxed text-card-foreground mb-6">
-            All communications are welcome. Whether you're a reader, artist, publisher, 
-            or fellow traveler through dystopian landscapes—reach out.
+            Tutte le comunicazioni sono benvenute. Che tu sia un lettore, artista, editore o semplicemente curioso.
           </p>
-          
+
           <div className="border-t border-border pt-6 mt-6">
-            <p className="text-muted-foreground mb-2">
-              Response time: Usually within 24-48 hours
-            </p>
-            <p className="text-sm font-mono text-primary">
-              &gt; transmission.received()_
+            <p className="text-muted-foreground">
+              Tempo di risposta: solitamente entro 24-48 ore
             </p>
           </div>
-        </div>
-        
-        <div className="mt-12 text-center">
-          <p className="text-xs font-mono text-muted-foreground">
-            // No data harvesting. No tracking. Just human connection in a digital age.
-          </p>
         </div>
       </div>
     </div>

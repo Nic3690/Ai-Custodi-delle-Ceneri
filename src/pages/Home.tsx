@@ -1,50 +1,70 @@
-import heroBg from "@/assets/hero-bg.jpg";
+import LiquidEther from "@/components/backgrounds/LiquidEther";
+import GradientText from "@/components/text/GradientText";
 
 const Home = () => {
   return (
-    <div className="relative min-h-full flex items-center justify-center overflow-hidden">
-      {/* Background image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-50 animate-distort"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      />
-      
-      {/* Noise overlay */}
-      <div className="absolute inset-0 noise-bg opacity-50" />
-      
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-darker-bg via-transparent to-background" />
-      
+    <div className="relative min-h-full flex items-center justify-center overflow-hidden grid-overlay">
+      {/* Liquid Ether Background */}
+      <div className="absolute inset-0">
+        <LiquidEther
+          colors={["#326266", "#23babd", "#b7e2e5"]}
+          mouseForce={35}
+          cursorSize={200}
+          resolution={0.7}
+          autoIntensity={3.5}
+          autoSpeed={0.8}
+          isViscous={true}
+          viscous={20}
+          className="w-full h-full"
+        />
+      </div>
+
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-24 text-center">
+      <div className="relative z-10 container mx-auto px-4 py-12 md:py-32 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 
-            className="text-6xl md:text-8xl font-bold mb-8 glitch neon-text animate-flicker"
-            data-text="NAQ EVIUS"
+          <GradientText
+            className="text-5xl md:text-8xl font-bold mb-12 uppercase tracking-widest"
+            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+            animationSpeed={6}
+            style={{ fontFamily: "'Equinox', sans-serif" }}
           >
-            NAQ EVIUS
-          </h1>
-          
-          <div className="cyber-glow bg-card/30 backdrop-blur p-8 md:p-12 rounded-lg mb-8 animate-distort">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 hologram animate-flicker">
-              <span className="text-primary neon-text">PREFACE</span>
-            </h2>
-            
-            <p className="text-lg md:text-xl leading-relaxed mb-6 text-card-foreground">
-              In the shadow of collapsing civilizations and fractured realities, 
-              stories emerge that challenge our perception of what's possible. 
-            </p>
-            
-            <p className="text-lg md:text-xl leading-relaxed text-muted-foreground">
-              Each narrative explores the boundaries between human and machine, 
-              freedom and control, truth and manufactured reality. Through dystopian 
-              landscapes and speculative futures, these tales ask: What does it mean 
-              to be human when humanity itself is being redefined?
-            </p>
+            AI CUSTODI DELLE CENERI
+          </GradientText>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-8">
+          <p className="text-sm md:text-base leading-relaxed mb-14 text-card-foreground text-center data-line">
+            Questa è una storia costruita per frammenti.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-14 text-left">
+            <div className="space-y-6">
+              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
+                La storia dell'umanità nell'arco di più di due secoli. Da oggi al XXIII secolo. Ogni frammento è un racconto, ogni racconto è ambientato in un tempo e in un luogo diverso.
+              </p>
+
+              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
+                Cambiamento climatico, guerre per le risorse, migrazioni di massa e altri disastri spingeranno i popoli verso i poli del pianeta, ma soprattutto verso l'orbita terrestre, la luna e infine Marte.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
+                Ma aimè non si può scappare da se stessi, e l'umanità porta via con sé l'egoismo e le paure che l'hanno sempre accompagnata, e forse sempre lo faranno.
+              </p>
+
+              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
+                Così le colonie spaziali crescono avidamente e si arricchiscono a discapito del pianeta, fino a rendersi indipendenti e metterlo in scacco. Un nuovo equilibrio sembra essersi stabilito dopo una crisi che sembrava senza fine.
+              </p>
+            </div>
           </div>
-          
-          <p className="text-xl text-primary font-mono animate-flicker">
-            &gt; WELCOME TO THE EDGE OF TOMORROW_
+
+          <p className="text-sm md:text-base leading-relaxed text-card-foreground text-center coords mb-12">
+            Finché…
+          </p>
+
+          <p className="text-2xl tracking-wide font-mono blink-cursor text-center" style={{ color: '#ff5657' }}>
+            Scopri gli E-Book
           </p>
         </div>
       </div>
