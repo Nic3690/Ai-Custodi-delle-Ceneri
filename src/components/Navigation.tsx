@@ -21,7 +21,13 @@ const items = [
 ];
 
 export function Navigation() {
-  const { open } = useSidebar();
+  const { open, setOpenMobile, isMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   return (
     <Sidebar className={open ? "w-64" : "w-16"} collapsible="icon">
@@ -43,6 +49,7 @@ export function Navigation() {
                       end
                       className="transition-all rounded-none scan-hover"
                       activeClassName=""
+                      onClick={handleLinkClick}
                     >
                       <item.icon
                         className={`h-5 w-5 ${item.url === "/secret" ? "icon-glitch" : ""}`}
