@@ -29,7 +29,7 @@ export const Layout = ({ children }: LayoutProps) => {
           <header className="h-20 border-b border-primary/50 flex items-center px-8 bg-background relative z-10">
             <SidebarTrigger />
             <div className="ml-4">
-              <span className="text-sm font-mono text-primary">// {currentPage}</span>
+              <span className="text-sm font-mono" style={{ color: '#ff5657' }}>// {currentPage}</span>
             </div>
           </header>
 

@@ -1,55 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, MessageSquare, Github, Twitter, Instagram, Rss } from "lucide-react";
+import { Mail, Instagram } from "lucide-react";
 import GradientText from "@/components/text/GradientText";
 
 const contactMethods = [
   {
     icon: Mail,
     title: "Email",
-    value: "email@example.com",
-    link: "mailto:email@example.com",
+    value: "aicustodidelleceneri@gmail.com",
+    link: "mailto:aicustodidelleceneri@gmail.com",
     description: "Per richieste, collaborazioni o semplicemente per salutare",
-  },
-  {
-    icon: Twitter,
-    title: "Twitter / X",
-    value: "@username",
-    link: "https://twitter.com/username",
-    description: "Aggiornamenti e pensieri brevi",
   },
   {
     icon: Instagram,
     title: "Instagram",
-    value: "@username",
-    link: "https://instagram.com/username",
+    value: "@ai.custodi.delle.ceneri.saga",
+    link: "https://www.instagram.com/ai.custodi.delle.ceneri.saga",
     description: "Frammenti visivi dai mondi distopici",
-  },
-  {
-    icon: Github,
-    title: "GitHub",
-    value: "github.com/username",
-    link: "https://github.com/username",
-    description: "Risorse e strumenti open source",
-  },
-  {
-    icon: MessageSquare,
-    title: "Discord",
-    value: "Server Discord",
-    link: "https://discord.gg/example",
-    description: "Unisciti alla community",
-  },
-  {
-    icon: Rss,
-    title: "Newsletter",
-    value: "Iscriviti per aggiornamenti",
-    link: "#newsletter",
-    description: "Aggiornamenti mensili sulle nuove storie",
   },
 ];
 
 const Contacts = () => {
   return (
-    <div className="container mx-auto px-4 py-12 md:py-32">
+    <div className="container mx-auto px-4 py-12 md:py-16">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-6">
           <GradientText

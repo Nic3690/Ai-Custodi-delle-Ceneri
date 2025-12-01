@@ -1,4 +1,5 @@
 import { Orbit, Fingerprint, ScrollText, Lock, Aperture, Radio } from "lucide-react";
+import MorphingShape from "./MorphingShape";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -30,24 +31,27 @@ export function Navigation() {
   };
 
   return (
-    <Sidebar className={open ? "w-64" : "w-16"} collapsible="icon">
+    <Sidebar className={open ? "w-64" : "w-24"} collapsible="icon">
       <SidebarContent className="bg-background border-r border-primary/30">
-        <div className="p-6 border-b border-primary/30">
-          <h2 className={`font-bold text-primary transition-all ${open ? "text-lg" : "text-xs"}`} style={{ fontFamily: "'Equinox', sans-serif" }}>
-            {open ? "ACDC" : "A"}
-          </h2>
+        <div className={`border-b border-primary/30 flex items-center h-20 ${open ? "px-6 justify-start gap-3" : "justify-center"}`}>
+          <MorphingShape className="text-primary" />
+          {open && (
+            <h2 className="font-bold text-primary text-2xl" style={{ fontFamily: "'Equinox', sans-serif" }}>
+              NAQ EVIUS
+            </h2>
+          )}
         </div>
         
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} className="border-b border-primary/30 py-4">
+                <SidebarMenuItem key={item.title} className={`border-b border-primary/30 py-4 ${!open ? "flex justify-center" : ""}`}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
                       end
-                      className="transition-all rounded-none scan-hover"
+                      className={`transition-all rounded-none scan-hover ${!open ? "justify-center" : ""}`}
                       activeClassName=""
                       onClick={handleLinkClick}
                     >

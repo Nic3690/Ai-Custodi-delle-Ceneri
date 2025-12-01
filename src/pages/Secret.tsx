@@ -1,13 +1,14 @@
 import { Lock } from "lucide-react";
 import GradientText from "@/components/text/GradientText";
+import Typewriter from "@/components/text/Typewriter";
 
 const Secret = () => {
   return (
     <div className="min-h-full flex items-center justify-center">
-      <div className="container mx-auto px-4 py-12 md:py-24 text-center">
+      <div className="container mx-auto px-4 py-12 md:py-16 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12">
-            <Lock className="h-24 w-24 mx-auto text-primary mb-6" />
+            <Lock className="h-24 w-24 mx-auto text-primary mb-6 icon-glitch" />
           </div>
 
           <GradientText
@@ -21,27 +22,27 @@ const Secret = () => {
 
           <div className="p-8 md:p-12 mb-8">
             <p className="text-xl md:text-2xl text-primary mb-8">
-              ACCESSO NEGATO
+              <Typewriter text="ACCESSO NEGATO" delay={300} />
             </p>
 
             <div className="border-l-4 pl-6 text-left max-w-2xl mx-auto" style={{ borderColor: '#ff5657' }}>
               <p className="text-lg text-card-foreground mb-4">
-                Qualcosa di più grande sta arrivando.
+                <Typewriter text="Qualcosa di più grande sta arrivando." delay={1000} />
               </p>
               <p className="text-lg text-card-foreground mb-4">
-                Non una storia. Non un avvertimento. Un mondo completo.
+                <Typewriter text="Non una storia. Non un avvertimento. Un mondo completo." delay={2500} />
               </p>
               <p className="text-lg" style={{ color: '#ff5657' }}>
-                Un romanzo che renderà i racconti brevi frammenti di una verità più grande...
+                <Typewriter text="Un romanzo che renderà i racconti brevi frammenti di una verità più grande..." delay={4500} />
               </p>
             </div>
 
             <div className="pt-12">
               <p className="text-2xl text-primary mb-4">
-                STATUS: CLASSIFICATO
+                <Typewriter text="STATUS: CLASSIFICATO" delay={7000} />
               </p>
               <p className="text-sm text-muted-foreground">
-                DATA DI RILASCIO: DA DEFINIRE
+                <Typewriter text="DATA DI RILASCIO: DA DEFINIRE" delay={8500} />
               </p>
             </div>
           </div>

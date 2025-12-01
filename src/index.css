@@ -29,7 +29,7 @@ All colors MUST be HSL.
     --foreground: 184 44% 81%;
 
     --card: 0 0% 8%;
-    --card-foreground: 184 44% 81%;
+    --card-foreground: 181 69% 44%;
 
     --popover: 0 0% 8%;
     --popover-foreground: 184 44% 81%;
@@ -41,7 +41,7 @@ All colors MUST be HSL.
     --secondary-foreground: 0 0% 100%;
 
     --muted: 183 34% 30%;
-    --muted-foreground: 184 30% 60%;
+    --muted-foreground: 184 44% 81%;
 
     --accent: 0 100% 67%;
     --accent-foreground: 0 0% 100%;
@@ -623,6 +623,45 @@ All colors MUST be HSL.
     width: 3px;
     height: 100%;
     background: linear-gradient(180deg, #ff5657 0%, #23babd 100%);
+  }
+
+  /* Fluid geometric morphing animation */
+  @keyframes blob {
+    0%, 100% {
+      border-radius: 50%;
+    }
+    33% {
+      border-radius: 10%;
+    }
+    66% {
+      border-radius: 0%;
+    }
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .morphing-container {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    animation: rotate 8s linear infinite;
+  }
+
+  .morphing-shape-outline {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: transparent;
+    border: 2px solid currentColor;
+    animation: blob 3s ease-in-out infinite;
+    filter: blur(0.5px);
   }
 }
 
