@@ -15,7 +15,7 @@ const contactMethods = [
     title: "Instagram",
     value: "@ai.custodi.delle.ceneri.saga",
     link: "https://www.instagram.com/ai.custodi.delle.ceneri.saga",
-    description: "Frammenti visivi dai mondi distopici",
+    description: "Per news, anteprime, approfondimenti, eventi",
   },
 ];
 
@@ -35,7 +35,7 @@ const Contacts = () => {
         </div>
 
         <p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
-          Connettiti con me attraverso varie piattaforme.
+          Dove trovarmi fuori da qui
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">

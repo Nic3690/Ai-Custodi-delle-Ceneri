@@ -39,7 +39,7 @@ const Home = () => {
             <Typewriter text="Questa è una storia costruita per frammenti." delay={300} />
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-14 text-left">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 mb-14 text-left">
             <div className="space-y-6">
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
                 <Typewriter

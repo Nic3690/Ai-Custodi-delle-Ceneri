@@ -1,34 +1,39 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, FileText } from "lucide-react";
+import { Download, FileText, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import GradientText from "@/components/text/GradientText";
 
 const stories = [
   {
     title: "La grande pesca",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    year: "2024",
+    description: "“Si ricordò che era venuto fin lì non per vedere ciò che già sapeva, ma per andare oltre.”",
+    annoStesura: "2022",
+    primaEdizione: "2025",
     pages: "45 pagine",
-    image: "/images/tav_7.png",
+    image: "/images/la_grande_pesca.png",
   },
   {
     title: "Efren tra i lupi",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    year: "2024",
+    annoStesura: "—",
+    primaEdizione: "—",
     pages: "62 pagine",
     image: null,
   },
   {
     title: "I confini dell'uomo",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    year: "2024",
+    annoStesura: "—",
+    primaEdizione: "—",
     pages: "38 pagine",
     image: null,
   },
   {
     title: "La stazione del ritorno",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    year: "2024",
+    annoStesura: "—",
+    primaEdizione: "—",
     pages: "51 pagine",
     image: null,
   },
@@ -56,7 +61,7 @@ const Stories = () => {
               key={index}
               className="bg-card border-border hover:border-primary transition-all duration-300 group flex flex-col overflow-hidden"
             >
-              <div className="h-48 bg-muted overflow-hidden relative">
+              <div className="aspect-[3/4] bg-muted overflow-hidden relative">
                 {story.image ? (
                   <img
                     src={story.image}
@@ -75,7 +80,6 @@ const Stories = () => {
               <CardHeader>
                 <div className="flex items-start justify-between mb-2">
                   <FileText className="h-5 w-5" style={{ color: '#ff5657' }} />
-                  <span className="text-xs font-mono text-muted-foreground">{story.year}</span>
                 </div>
                 <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors tracking-wider">
                   {story.title}
@@ -84,8 +88,22 @@ const Stories = () => {
                   {story.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex-1">
-                <p className="text-sm font-mono text-muted-foreground">{story.pages}</p>
+              <CardContent className="flex-1 space-y-1">
+                <div className="flex items-center gap-1">
+                  <p className="text-xs font-mono text-muted-foreground">Anno di stesura: {story.annoStesura}</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-3 w-3 text-muted-foreground hover:text-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs text-xs">
+                        Per rispettare l'evoluzione stilistica e le previsioni dell'autore, si è scelto di esplicitare anche l'anno di stesura dei racconti.
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <p className="text-xs font-mono text-muted-foreground">Prima edizione: {story.primaEdizione}</p>
+                <p className="text-sm font-mono text-muted-foreground mt-2">{story.pages}</p>
               </CardContent>
               <CardFooter>
                 <Button className="w-full bg-primary hover:bg-primary/80 text-primary-foreground">

@@ -20,7 +20,7 @@ const Bio = () => {
           <Typewriter text="L'Autore" delay={300} />
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-14 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 text-left">
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
               <Typewriter
@@ -44,11 +44,11 @@ const Bio = () => {
           <Typewriter text="Il Progetto" delay={9000} />
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-14 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 text-left">
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
               <Typewriter
-                text="Ai Custodi delle Ceneri è una saga Sci-Fi di ampio respiro, contaminata da vari sottogeneri e stili. Corale, pulp, moderna, con un worldbuilding dettagliato e realistico. L'elaborazione dell'universo narrativo ha richiesto più di vent'anni di tentativi e riscritture, fino ad"
+                text="Ai Custodi delle Ceneri è una saga Sci-Fi di ampio respiro, contaminata da vari sottogeneri e stili. Corale, pulp, moderna, con un worldbuilding dettagliato e realistico. L'elaborazione dell'universo narrativo ha richiesto più di vent'anni di tentativi e riscritture,"
                 delay={9500}
               />
             </p>
@@ -57,16 +57,38 @@ const Bio = () => {
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
               <Typewriter
-                text="arrivare alla forma attuale. Tutti i racconti sono collegati da dettagli più o meno nascosti e tutti fungono da preludio al romanzo che costituirà il cuore della storia."
+                text="fino ad arrivare alla forma attuale. Tutti i racconti sono collegati da dettagli più o meno nascosti e tutti fungono da preludio a qualcosa di più grande."
                 delay={14000}
               />
             </p>
           </div>
         </div>
 
-        <p className="text-sm md:text-base leading-snug text-card-foreground text-center coords">
-          <Typewriter text="...in costruzione" delay={17000} />
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 pt-14 text-left">
+          <div className="space-y-4">
+            <p className="text-sm md:text-base leading-snug text-muted-foreground italic">
+              <Typewriter
+                text={`"C'è vita su Marte? Nel 2088 la risposta era un secco bù, cioè 'no' in cinese."`}
+                delay={17000}
+              />
+            </p>
+            <p className="text-xs text-card-foreground text-right">
+              <Typewriter text="— La grande pesca" delay={20000} />
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm md:text-base leading-snug text-muted-foreground italic">
+              <Typewriter
+                text={`"Si ricordò che era venuto fin lì non per vedere ciò che già sapeva, ma per andare oltre."`}
+                delay={20500}
+              />
+            </p>
+            <p className="text-xs text-card-foreground text-right">
+              <Typewriter text="— La grande pesca" delay={24000} />
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
