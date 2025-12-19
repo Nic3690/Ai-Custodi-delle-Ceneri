@@ -1,19 +1,35 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+
+// Module-level Set to track played animations
+// Resets on page reload, persists during SPA navigation
+const playedAnimations = new Set<string>();
 
 interface TypewriterProps {
   text: string;
   speed?: number;
   delay?: number;
   className?: string;
+  storageKey?: string;
 }
 
-const Typewriter = ({ text, speed = 15, delay = 0, className = "" }: TypewriterProps) => {
-  const [displayedText, setDisplayedText] = useState("");
-  const [started, setStarted] = useState(false);
+const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey }: TypewriterProps) => {
+  const effectiveKey = useMemo(() => {
+    return storageKey || `typewriter_${text.slice(0, 30)}`;
+  }, [storageKey, text]);
+
+  const hasPlayedBefore = useMemo(() => {
+    return playedAnimations.has(effectiveKey);
+  }, [effectiveKey]);
+
+  const [displayedText, setDisplayedText] = useState(hasPlayedBefore ? text : "");
+  const [started, setStarted] = useState(hasPlayedBefore);
+  const [isComplete, setIsComplete] = useState(hasPlayedBefore);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    if (hasPlayedBefore) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -29,20 +45,20 @@ const Typewriter = ({ text, speed = 15, delay = 0, className = "" }: TypewriterP
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [hasPlayedBefore]);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || hasPlayedBefore) return;
 
     const delayTimer = setTimeout(() => {
       setStarted(true);
     }, delay);
 
     return () => clearTimeout(delayTimer);
-  }, [delay, isVisible]);
+  }, [delay, isVisible, hasPlayedBefore]);
 
   useEffect(() => {
-    if (!started) return;
+    if (!started || isComplete) return;
 
     if (displayedText.length < text.length) {
       const timer = setTimeout(() => {
@@ -50,13 +66,22 @@ const Typewriter = ({ text, speed = 15, delay = 0, className = "" }: TypewriterP
       }, speed);
 
       return () => clearTimeout(timer);
+    } else {
+      setIsComplete(true);
+      playedAnimations.add(effectiveKey);
     }
-  }, [displayedText, text, speed, started]);
+  }, [displayedText, text, speed, started, isComplete, effectiveKey]);
 
   return (
     <span ref={ref} className={className}>
-      {displayedText}
-      {started && displayedText.length < text.length && <span className="animate-pulse">|</span>}
+      {/* Visible typed characters */}
+      <span>{displayedText}</span>
+      {/* Cursor */}
+      {started && !isComplete && <span className="animate-pulse">|</span>}
+      {/* Invisible remaining characters to reserve space */}
+      <span className="invisible" aria-hidden="true">
+        {text.slice(displayedText.length)}
+      </span>
     </span>
   );
 };

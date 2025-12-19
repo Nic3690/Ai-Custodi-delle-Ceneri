@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Mail, Instagram, Heart } from "lucide-react";
 import GradientText from "@/components/text/GradientText";
 
 const contactMethods = [
@@ -79,15 +80,35 @@ const Contacts = () => {
             Scrivimi
           </h2>
 
-          <p className="text-lg leading-relaxed text-card-foreground mb-6">
+          <p className="text-lg leading-relaxed mb-6" style={{ color: '#b7e2e5' }}>
             Tutte le comunicazioni sono benvenute. Che tu sia un lettore, artista, editore o semplicemente curioso.
           </p>
+        </div>
 
-          <div className="border-t border-border pt-6 mt-6">
-            <p className="text-muted-foreground">
-              Tempo di risposta: solitamente entro 24-48 ore
-            </p>
-          </div>
+        <div className="p-8 md:p-12 text-center border-t border-border">
+          <Heart className="h-12 w-12 mx-auto mb-6" style={{ color: '#ff5657' }} />
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary">
+            Sostieni il progetto
+          </h2>
+
+          <p className="text-lg leading-relaxed mb-8" style={{ color: '#b7e2e5' }}>
+            Se ti piace quello che faccio, puoi supportare il progetto con una donazione libera.
+          </p>
+
+          <a
+            href="https://www.paypal.com/donate/?hosted_button_id=YOUR_BUTTON_ID"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="text-lg px-8 py-6" style={{ backgroundColor: '#ff5657' }}>
+              <Heart className="mr-2 h-5 w-5" />
+              Dona con PayPal
+            </Button>
+          </a>
+
+          <p className="text-sm text-muted-foreground mt-6">
+            Ogni contributo aiuta a mantenere vivo questo universo narrativo.
+          </p>
         </div>
       </div>
     </div>

@@ -1,13 +1,13 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, Info } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import GradientText from "@/components/text/GradientText";
 
 const stories = [
   {
     title: "La grande pesca",
-    description: "“Si ricordò che era venuto fin lì non per vedere ciò che già sapeva, ma per andare oltre.”",
+    description: `"Si ricordò che era venuto fin lì non per vedere ciò che già sapeva, ma per andare oltre."`,
     annoStesura: "2022",
     primaEdizione: "2025",
     pages: "45 pagine",
@@ -19,22 +19,6 @@ const stories = [
     annoStesura: "—",
     primaEdizione: "—",
     pages: "62 pagine",
-    image: null,
-  },
-  {
-    title: "I confini dell'uomo",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    annoStesura: "—",
-    primaEdizione: "—",
-    pages: "38 pagine",
-    image: null,
-  },
-  {
-    title: "La stazione del ritorno",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    annoStesura: "—",
-    primaEdizione: "—",
-    pages: "51 pagine",
     image: null,
   },
 ];
@@ -61,7 +45,7 @@ const Stories = () => {
               key={index}
               className="bg-card border-border hover:border-primary transition-all duration-300 group flex flex-col overflow-hidden"
             >
-              <div className="aspect-[3/4] bg-muted overflow-hidden relative">
+              <div className="aspect-[2/3] bg-muted overflow-hidden relative">
                 {story.image ? (
                   <img
                     src={story.image}
@@ -91,16 +75,14 @@ const Stories = () => {
               <CardContent className="flex-1 space-y-1">
                 <div className="flex items-center gap-1">
                   <p className="text-xs font-mono text-muted-foreground">Anno di stesura: {story.annoStesura}</p>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="h-3 w-3 text-muted-foreground hover:text-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-xs text-xs">
-                        Per rispettare l'evoluzione stilistica e le previsioni dell'autore, si è scelto di esplicitare anche l'anno di stesura dei racconti.
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Popover>
+                    <PopoverTrigger>
+                      <Info className="h-3 w-3 text-muted-foreground hover:text-foreground cursor-help" />
+                    </PopoverTrigger>
+                    <PopoverContent className="max-w-xs text-xs">
+                      Per rispettare l'evoluzione stilistica e le previsioni dell'autore, si è scelto di esplicitare anche l'anno di stesura dei racconti.
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <p className="text-xs font-mono text-muted-foreground">Prima edizione: {story.primaEdizione}</p>
                 <p className="text-sm font-mono text-muted-foreground mt-2">{story.pages}</p>
@@ -117,7 +99,7 @@ const Stories = () => {
 
         <div className="mt-16 text-center">
           <p className="text-muted-foreground">
-            Tutte le storie sono rilasciate sotto Creative Commons.
+            Racconto e illustrazioni sono condivisi secondo i termini della licenza Creative Commons CC BY-NC-ND 4.0.
           </p>
         </div>
       </div>

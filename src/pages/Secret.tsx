@@ -17,7 +17,7 @@ const Secret = () => {
             animationSpeed={6}
             style={{ fontFamily: "'Equinox', sans-serif" }}
           >
-            [REDACTED]
+            [RICHIESTA RESPINTA]
           </GradientText>
 
           <div className="p-8 md:p-12 mb-8">
@@ -26,14 +26,14 @@ const Secret = () => {
             </p>
 
             <div className="border-l-4 pl-6 text-left max-w-2xl mx-auto" style={{ borderColor: '#ff5657' }}>
-              <p className="text-lg text-card-foreground mb-4">
+              <p className="text-lg mb-4" style={{ color: '#b7e2e5' }}>
                 <Typewriter text="Qualcosa di più grande sta arrivando." delay={1000} />
               </p>
-              <p className="text-lg text-card-foreground mb-4">
+              <p className="text-lg mb-4" style={{ color: '#b7e2e5' }}>
                 <Typewriter text="Non una storia. Non un avvertimento. Un mondo completo." delay={2500} />
               </p>
               <p className="text-lg" style={{ color: '#ff5657' }}>
-                <Typewriter text="Un romanzo che renderà i racconti brevi frammenti di una verità più grande..." delay={4500} />
+                <Typewriter text="Un romanzo che renderà i racconti frammenti di una verità più grande..." delay={4500} />
               </p>
             </div>
 

@@ -44,14 +44,14 @@ const Home = () => {
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
                 <Typewriter
                   text="La storia dell'umanità nell'arco di più di due secoli. Da oggi al XXIII secolo. Ogni frammento è un racconto, ogni racconto è ambientato in un tempo e in un luogo diverso."
-                  delay={1200}
+                  delay={1000}
                 />
               </p>
 
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
                 <Typewriter
                   text="Cambiamento climatico, guerre per le risorse, migrazioni di massa e altri disastri spingeranno i popoli verso i poli del pianeta, ma soprattutto verso l'orbita terrestre, la luna e infine Marte."
-                  delay={4500}
+                  delay={3750}
                 />
               </p>
             </div>
@@ -60,21 +60,21 @@ const Home = () => {
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
                 <Typewriter
                   text="Ma aimè non si può scappare da se stessi, e l'umanità porta via con sé l'egoismo e le paure che l'hanno sempre accompagnata, e forse sempre lo faranno."
-                  delay={8000}
+                  delay={6800}
                 />
               </p>
 
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
                 <Typewriter
                   text="Così le colonie spaziali crescono avidamente e si arricchiscono a discapito del pianeta, fino a rendersi indipendenti e metterlo in scacco. Un nuovo equilibrio sembra essersi stabilito dopo una crisi che sembrava senza fine."
-                  delay={11000}
+                  delay={9200}
                 />
               </p>
             </div>
           </div>
 
           <p className="text-sm md:text-base leading-relaxed text-card-foreground text-center coords mb-12">
-            <Typewriter text="Finché…" delay={15000} />
+            <Typewriter text="Finché…" delay={12650} />
           </p>
 
           <Link to="/stories" className="text-2xl tracking-wide font-mono blink-cursor text-center hover:opacity-80 transition-opacity" style={{ color: '#ff5657' }}>
