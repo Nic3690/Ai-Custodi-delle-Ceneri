@@ -74,14 +74,17 @@ const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey }:
 
   return (
     <span ref={ref} className={className}>
-      {/* Visible typed characters */}
-      <span>{displayedText}</span>
-      {/* Cursor */}
+      {text.split("").map((char, index) => (
+        <span
+          key={index}
+          style={{
+            visibility: index < displayedText.length ? "visible" : "hidden",
+          }}
+        >
+          {char}
+        </span>
+      ))}
       {started && !isComplete && <span className="animate-pulse">|</span>}
-      {/* Invisible remaining characters to reserve space */}
-      <span className="invisible" aria-hidden="true">
-        {text.slice(displayedText.length)}
-      </span>
     </span>
   );
 };

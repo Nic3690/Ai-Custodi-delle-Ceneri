@@ -586,12 +586,6 @@ All colors MUST be HSL.
     z-index: 1;
   }
 
-  @media (max-width: 768px) {
-    .grid-overlay::before {
-      display: none;
-    }
-  }
-
   /* Underline animation */
   .link-underline {
     position: relative;
