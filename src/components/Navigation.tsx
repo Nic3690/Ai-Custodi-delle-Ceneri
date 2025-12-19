@@ -1,6 +1,6 @@
 import { Orbit, Fingerprint, ScrollText, Lock, Aperture, Radio } from "lucide-react";
-import MorphingShape from "./MorphingShape";
 import { NavLink } from "@/components/NavLink";
+import LogoNaq from "@/assets/Logo_Naq.png";
 import {
   Sidebar,
   SidebarContent,
@@ -34,7 +34,7 @@ export function Navigation() {
     <Sidebar className={open ? "w-64" : "w-24"} collapsible="icon">
       <SidebarContent className="bg-background border-r border-primary/30">
         <div className={`border-b border-primary/30 flex items-center h-20 ${open ? "px-6 justify-start gap-3" : "justify-center"}`}>
-          <MorphingShape className="text-primary" />
+          <img src={LogoNaq} alt="NAQ EVIUS Logo" className={`${open ? "h-8" : "h-6"}`} />
           {open && (
             <h2 className="font-bold text-primary text-2xl" style={{ fontFamily: "'Equinox', sans-serif" }}>
               NAQ EVIUS
