@@ -29,6 +29,10 @@ const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey, e
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    if (eager && !isVisible) setIsVisible(true);
+  }, [eager, isVisible]);
+
+  useEffect(() => {
     if (hasPlayedBefore || eager) return;
 
     const observer = new IntersectionObserver(
