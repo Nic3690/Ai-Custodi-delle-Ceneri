@@ -1,8 +1,10 @@
+import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
-import LiquidEther from "@/components/backgrounds/LiquidEther";
 import GradientText from "@/components/text/GradientText";
 import Typewriter from "@/components/text/Typewriter";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+const LiquidEther = lazy(() => import("@/components/backgrounds/LiquidEther"));
 
 // Typing speed in ms per character
 const TYPING_SPEED = 15;
@@ -39,19 +41,23 @@ const Home = () => {
     <div className="relative min-h-full flex items-center justify-center overflow-hidden">
       {/* Liquid Ether Background - hidden on mobile */}
       {!isMobile && (
-        <div className="absolute inset-0">
-          <LiquidEther
-            colors={["#326266", "#23babd", "#b7e2e5"]}
-            mouseForce={35}
-            cursorSize={200}
-            resolution={0.7}
-            autoIntensity={3.5}
-            autoSpeed={0.8}
-            isViscous={true}
-            viscous={20}
-            className="w-full h-full"
-          />
-        </div>
+        <Suspense fallback={null}>
+          <div className="absolute inset-0">
+            <LiquidEther
+              colors={["#326266", "#23babd", "#b7e2e5"]}
+              mouseForce={35}
+              cursorSize={200}
+              resolution={0.4}
+              autoIntensity={3.5}
+              autoSpeed={0.8}
+              isViscous={false}
+              iterationsPoisson={12}
+              BFECC={false}
+              targetFPS={30}
+              className="w-full h-full"
+            />
+          </div>
+        </Suspense>
       )}
 
       {/* Content */}
@@ -69,33 +75,33 @@ const Home = () => {
 
         <div className="max-w-5xl mx-auto px-8">
           <p className="text-sm md:text-base leading-relaxed mb-14 text-card-foreground text-center data-line">
-            <Typewriter text={texts.t1} delay={d1} />
+            <Typewriter text={texts.t1} delay={d1} eager={isMobile} />
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 mb-14 text-left">
             <div className="space-y-6">
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t2} delay={d2} />
+                <Typewriter text={texts.t2} delay={d2} eager={isMobile} />
               </p>
 
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t3} delay={d3} />
+                <Typewriter text={texts.t3} delay={d3} eager={isMobile} />
               </p>
             </div>
 
             <div className="space-y-6">
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t4} delay={d4} />
+                <Typewriter text={texts.t4} delay={d4} eager={isMobile} />
               </p>
 
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t5} delay={d5} />
+                <Typewriter text={texts.t5} delay={d5} eager={isMobile} />
               </p>
             </div>
           </div>
 
           <p className="text-sm md:text-base leading-relaxed text-card-foreground text-center coords mb-12">
-            <Typewriter text={texts.t6} delay={d6} />
+            <Typewriter text={texts.t6} delay={d6} eager={isMobile} />
           </p>
 
           <Link to="/stories" className="text-2xl tracking-wide font-mono blink-cursor text-center hover:opacity-80 transition-opacity" style={{ color: '#ff5657' }}>

@@ -1,5 +1,6 @@
 import GradientText from "@/components/text/GradientText";
 import Typewriter from "@/components/text/Typewriter";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Typing speed in ms per character
 const TYPING_SPEED = 15;
@@ -14,11 +15,11 @@ const calcDelay = (prevDelay: number, prevTextLength: number): number => {
 // Text content
 const texts = {
   t1: "L'Autore",
-  t2: "Naq Evius è il nome iniziatico di Alessio Salvati. Autore di narrativa e musica, nasce a Roma nel 1988. Da sempre affascinato dall'arte, affonda le radici in contesti gremiti di creatività fin dall'adolescenza, arrivando a inquadrare al meglio il proprio estro nella maturità.",
+  t2: "Naq Evius è il nome iniziatico di Alessio Salvati. Autore di narrativa e musica, nasce a Roma nel 1988. Da sempre affascinato dall’arte, affonda le radici in contesti gremiti di creatività fin dall’adolescenza, arrivando a inquadrare al meglio il proprio estro nella maturità.",
   t3: "Nel mezzo della crisi di mezza età decide che le sue idee non possono restare in un cassetto e torna a esercitare sia musica che scrittura, puntando sull'autoproduzione e la diffusione delle sue opere sfruttando qualcosa che prima non aveva: i social network e nuovi capaci collaboratori.",
   t4: "Il Progetto",
-  t5: "Ai Custodi delle Ceneri è una saga Sci-Fi di ampio respiro, contaminata da vari sottogeneri e stili. Corale, pulp, moderna, con un worldbuilding dettagliato e realistico. L'elaborazione dell'universo narrativo ha richiesto più di vent'anni di tentativi e riscritture,",
-  t6: "fino ad arrivare alla forma attuale. Tutti i racconti sono collegati da dettagli più o meno nascosti e tutti fungono da preludio a qualcosa di più grande.",
+  t5: "Ai Custodi delle Ceneri è una saga Sci-Fi di ampio respiro, contaminata da vari sottogeneri e stili. Corale, epica, moderna, con un worldbuilding dettagliato e realistico. L’elaborazione dell’universo narrativo",
+  t6: "ha richiesto più di vent’anni di tentativi e riscritture, fino ad arrivare alla forma attuale. Tutti i racconti sono collegati da dettagli più o meno nascosti e tutti fungono da preludio a qualcosa di più grande.",
   t7a: `"C'è vita su Marte? Nel 2088 la risposta era un secco `,
   t7b: "bù",
   t7c: `, cioè 'no' in cinese."`,
@@ -42,6 +43,8 @@ const d8a = calcDelay(d7d, texts.t7d.length);
 const d8b = d8a + (texts.t8a.length * TYPING_SPEED) + 300;
 
 const Bio = () => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="container mx-auto px-6 py-12 md:py-16">
       <div className="max-w-5xl mx-auto">
@@ -57,37 +60,37 @@ const Bio = () => {
         </div>
 
         <p className="text-sm md:text-base leading-relaxed mb-14 text-card-foreground text-center data-line">
-          <Typewriter text={texts.t1} delay={d1} />
+          <Typewriter text={texts.t1} delay={d1} eager={isMobile} />
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20 md:mb-14 text-left">
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              <Typewriter text={texts.t2} delay={d2} />
+              <Typewriter text={texts.t2} delay={d2} eager={isMobile} />
             </p>
           </div>
 
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              <Typewriter text={texts.t3} delay={d3} />
+              <Typewriter text={texts.t3} delay={d3} eager={isMobile} />
             </p>
           </div>
         </div>
 
         <p className="text-sm md:text-base leading-relaxed mb-14 text-center" style={{ color: '#ff5657' }}>
-          <Typewriter text={texts.t4} delay={d4} />
+          <Typewriter text={texts.t4} delay={d4} eager={isMobile} />
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 text-left">
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              <Typewriter text={texts.t5} delay={d5} />
+              <Typewriter text={texts.t5} delay={d5} eager={isMobile} />
             </p>
           </div>
 
           <div className="space-y-6">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              <Typewriter text={texts.t6} delay={d6} />
+              <Typewriter text={texts.t6} delay={d6} eager={isMobile} />
             </p>
           </div>
         </div>
@@ -95,21 +98,21 @@ const Bio = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 pt-14 text-left">
           <div className="space-y-4">
             <p className="text-sm md:text-base leading-snug text-muted-foreground">
-              <Typewriter text={texts.t7a} delay={d7a} className="italic" />
-              <Typewriter text={texts.t7b} delay={d7b} />
-              <Typewriter text={texts.t7c} delay={d7c} className="italic" />
+              <Typewriter text={texts.t7a} delay={d7a} className="italic" eager={isMobile} />
+              <Typewriter text={texts.t7b} delay={d7b} eager={isMobile} />
+              <Typewriter text={texts.t7c} delay={d7c} className="italic" eager={isMobile} />
             </p>
             <p className="text-xs text-card-foreground text-right">
-              <Typewriter text={texts.t7d} delay={d7d} />
+              <Typewriter text={texts.t7d} delay={d7d} eager={isMobile} />
             </p>
           </div>
 
           <div className="space-y-4">
             <p className="text-sm md:text-base leading-snug text-muted-foreground italic">
-              <Typewriter text={texts.t8a} delay={d8a} />
+              <Typewriter text={texts.t8a} delay={d8a} eager={isMobile} />
             </p>
             <p className="text-xs text-card-foreground text-right">
-              <Typewriter text={texts.t8b} delay={d8b} />
+              <Typewriter text={texts.t8b} delay={d8b} eager={isMobile} />
             </p>
           </div>
         </div>

@@ -96,7 +96,7 @@ const Contacts = () => {
           </p>
 
           <a
-            href="https://www.paypal.com/donate/?hosted_button_id=YOUR_BUTTON_ID"
+            href="https://paypal.me/naqevius"
             target="_blank"
             rel="noopener noreferrer"
           >

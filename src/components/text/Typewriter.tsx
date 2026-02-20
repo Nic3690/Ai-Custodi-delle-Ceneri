@@ -10,9 +10,10 @@ interface TypewriterProps {
   delay?: number;
   className?: string;
   storageKey?: string;
+  eager?: boolean;
 }
 
-const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey }: TypewriterProps) => {
+const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey, eager = false }: TypewriterProps) => {
   const effectiveKey = useMemo(() => {
     return storageKey || `typewriter_${text.slice(0, 30)}`;
   }, [storageKey, text]);
@@ -24,11 +25,11 @@ const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey }:
   const [displayedText, setDisplayedText] = useState(hasPlayedBefore ? text : "");
   const [started, setStarted] = useState(hasPlayedBefore);
   const [isComplete, setIsComplete] = useState(hasPlayedBefore);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(eager);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (hasPlayedBefore) return;
+    if (hasPlayedBefore || eager) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,7 +46,7 @@ const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey }:
     }
 
     return () => observer.disconnect();
-  }, [hasPlayedBefore]);
+  }, [hasPlayedBefore, eager]);
 
   useEffect(() => {
     if (!isVisible || hasPlayedBefore) return;

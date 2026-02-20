@@ -1,61 +1,50 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, User } from "lucide-react";
+import { Link } from "react-router-dom";
 import GradientText from "@/components/text/GradientText";
 
-const artworks = [
+interface ArtistLink {
+  name: string;
+  link: string;
+}
+
+interface Piece {
+  title: string;
+  artists: ArtistLink[];
+  description: string;
+  image?: string | null;
+}
+
+interface StoryArt {
+  story: string;
+  pieces: Piece[];
+}
+
+const artworks: StoryArt[] = [
   {
-    story: "The Fractured Protocol",
+    story: "La Grande Pesca",
     pieces: [
       {
-        title: "Memory Fragments",
-        artist: "Alex Cyber",
-        link: "https://example.com/artist1",
-        description: "Digital consciousness dissolving into data streams",
-      },
-      {
-        title: "The Protocol Chamber",
-        artist: "Sarah Neon",
-        link: "https://example.com/artist2",
-        description: "Where memories are stored and manipulated",
+        title: "La prima collaborazione non si scorda mai",
+        artists: [
+          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art?igsh=d2J0dWNrN3kwMmx2" },
+        ],
+        description: "Due illustrazioni a quattro mani per un racconto breve",
+        image: "/images/tav_2.png",
       },
     ],
   },
   {
-    story: "Neon Ghosts",
+    story: "La Stazione del Ritorno",
     pieces: [
       {
-        title: "Digital Afterlife",
-        artist: "Marcus Glitch",
-        link: "https://example.com/artist3",
-        description: "Souls trapped in abandoned servers",
-      },
-      {
-        title: "Ghost Protocol",
-        artist: "Elena Dark",
-        link: "https://example.com/artist4",
-        description: "The liminal space between life and code",
-      },
-    ],
-  },
-  {
-    story: "Silent Uprising",
-    pieces: [
-      {
-        title: "Underground Network",
-        artist: "Alex Cyber",
-        link: "https://example.com/artist1",
-        description: "The hidden infrastructure of rebellion",
-      },
-    ],
-  },
-  {
-    story: "The Last Analog",
-    pieces: [
-      {
-        title: "Unplugged",
-        artist: "Sarah Neon",
-        link: "https://example.com/artist2",
-        description: "One person's refusal to upgrade",
+        title: "Due illustrazioni a quattro mani per un racconto breve",
+        artists: [
+          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art?igsh=d2J0dWNrN3kwMmx2" },
+          { name: "Luca Picone", link: "https://www.instagram.com/luca.zowie?igsh=MWx0Nm1pczFud2Fidg==" },
+        ],
+        description: "",
+        image: null,
       },
     ],
   },
@@ -77,7 +66,7 @@ const Gallery = () => {
         </div>
 
         <p className="text-center text-muted-foreground mb-12 text-lg">
-          Interpretazioni visive dei mondi distopici da artisti talentuosi.
+          Interpretazioni visive ispirate agli scritti della saga.
         </p>
 
         <div className="space-y-12">
@@ -93,32 +82,45 @@ const Gallery = () => {
                     key={pieceIndex}
                     className="bg-card border-border hover:border-primary transition-all duration-300 group"
                   >
-                    <div className="h-64 bg-muted border-b border-border flex items-center justify-center">
-                      <p className="text-muted-foreground font-mono text-sm">
-                        Artwork Placeholder
-                      </p>
+                    <div className="h-64 bg-muted border-b border-border flex items-center justify-center overflow-hidden">
+                      {piece.image ? (
+                        <img
+                          src={piece.image}
+                          alt={piece.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <p className="text-muted-foreground font-mono text-sm">
+                          // DATI IN ARRIVO
+                        </p>
+                      )}
                     </div>
 
                     <CardHeader>
                       <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
                         {piece.title}
                       </CardTitle>
-                      <CardDescription>
-                        {piece.description}
-                      </CardDescription>
+                      {piece.description && (
+                        <CardDescription>
+                          {piece.description}
+                        </CardDescription>
+                      )}
                     </CardHeader>
 
                     <CardContent>
-                      <a
-                        href={piece.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                      >
-                        <User className="h-4 w-4" />
-                        <span>{piece.artist}</span>
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
+                      {piece.artists.map((artist, artistIndex) => (
+                        <a
+                          key={artistIndex}
+                          href={artist.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-1 last:mb-0"
+                        >
+                          <User className="h-4 w-4" />
+                          <span>{artist.name}</span>
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      ))}
                     </CardContent>
                   </Card>
                 ))}
@@ -131,9 +133,9 @@ const Gallery = () => {
           <p className="text-lg text-card-foreground mb-4">
             Vuoi contribuire con le tue opere?
           </p>
-          <p className="text-primary">
+          <Link to="/contacts" className="text-primary hover:text-primary/80 transition-colors">
             Contattami per collaborare
-          </p>
+          </Link>
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ const stories = [
     image: "/images/la_grande_pesca.png",
   },
   {
-    title: "Efren tra i lupi",
+    title: "La Stazione del Ritorno",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     annoStesura: "—",
     primaEdizione: "—",
@@ -54,7 +54,7 @@ const Stories = () => {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-muted-foreground font-mono text-sm">
-                    // IMMAGINE IN ARRIVO
+                    // DATI IN ARRIVO
                   </div>
                 )}
                 <span className="absolute top-2 right-2 text-xs font-mono px-2 py-1 bg-background/80" style={{ color: '#ff5657' }}>

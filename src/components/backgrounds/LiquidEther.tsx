@@ -21,6 +21,7 @@ export interface LiquidEtherProps {
   takeoverDuration?: number;
   autoResumeDelay?: number;
   autoRampDuration?: number;
+  targetFPS?: number;
 }
 
 interface SimOptions {
@@ -73,7 +74,8 @@ export default function LiquidEther({
   autoIntensity = 2.2,
   takeoverDuration = 0.25,
   autoResumeDelay = 1000,
-  autoRampDuration = 0.6
+  autoRampDuration = 0.6,
+  targetFPS = 0
 }: LiquidEtherProps): React.ReactElement {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const webglRef = useRef<LiquidEtherWebGL | null>(null);
@@ -1005,11 +1007,16 @@ export default function LiquidEther({
       autoDriver?: AutoDriver;
       lastUserInteraction = performance.now();
       running = false;
+      targetFPS: number;
+      private _frameInterval: number;
+      private _lastFrameTime = 0;
       private _loop = this.loop.bind(this);
       private _resize = this.resize.bind(this);
       private _onVisibility?: () => void;
       constructor(props: any) {
         this.props = props;
+        this.targetFPS = props.targetFPS || 0;
+        this._frameInterval = this.targetFPS > 0 ? 1000 / this.targetFPS : 0;
         Common.init(props.$wrapper);
         Mouse.init(props.$wrapper);
         Mouse.autoIntensity = props.autoIntensity;
@@ -1053,8 +1060,14 @@ export default function LiquidEther({
       }
       loop() {
         if (!this.running) return;
-        this.render();
         rafRef.current = requestAnimationFrame(this._loop);
+        if (this._frameInterval > 0) {
+          const now = performance.now();
+          const elapsed = now - this._lastFrameTime;
+          if (elapsed < this._frameInterval) return;
+          this._lastFrameTime = now - (elapsed % this._frameInterval);
+        }
+        this.render();
       }
       start() {
         if (this.running) return;
@@ -1095,7 +1108,8 @@ export default function LiquidEther({
       autoIntensity,
       takeoverDuration,
       autoResumeDelay,
-      autoRampDuration
+      autoRampDuration,
+      targetFPS
     });
     webglRef.current = webgl;
 
@@ -1187,7 +1201,8 @@ export default function LiquidEther({
     autoIntensity,
     takeoverDuration,
     autoResumeDelay,
-    autoRampDuration
+    autoRampDuration,
+    targetFPS
   ]);
 
   useEffect(() => {
@@ -1219,6 +1234,8 @@ export default function LiquidEther({
       }
     }
     if (resolution !== prevRes) sim.resize();
+    webgl.targetFPS = targetFPS;
+    webgl._frameInterval = targetFPS > 0 ? 1000 / targetFPS : 0;
   }, [
     mouseForce,
     cursorSize,
@@ -1235,7 +1252,8 @@ export default function LiquidEther({
     autoIntensity,
     takeoverDuration,
     autoResumeDelay,
-    autoRampDuration
+    autoRampDuration,
+    targetFPS
   ]);
 
   return (
