@@ -15,23 +15,38 @@ const textBlocks = [
 
 const FRAME_COUNT_DESKTOP = 300;
 const FRAME_COUNT_MOBILE = 125;
-const SCROLL_HEIGHT = "1000vh";
 const LERP_SPEED_DESKTOP = 0.06;
-const LERP_SPEED_MOBILE = 0.15;
+const LERP_SPEED_MOBILE = 0.3;
 
-const VIDEO_FORWARD_END = 0.22;
-const TITLE_START = 0.19;
-const TITLE_SOLID = 0.25;
-const TEXT_ZONE_START = 0.28;
-const TEXT_ZONE_END = 0.68;
-const CTA_START = 0.70;
-const CTA_SOLID = 0.76;
-const VIDEO_REVERSE_START = 0.28;
-const VIDEO_REVERSE_END = 0.68;
+const DESKTOP = {
+  SCROLL_HEIGHT: "1000vh",
+  VIDEO_FORWARD_END: 0.22,
+  TITLE_START: 0.19,
+  TITLE_SOLID: 0.25,
+  TEXT_ZONE_START: 0.28,
+  TEXT_ZONE_END: 0.68,
+  CTA_START: 0.70,
+  CTA_SOLID: 0.76,
+  VIDEO_REVERSE_START: 0.28,
+  VIDEO_REVERSE_END: 0.68,
+};
 
-function getTextStyle(progress: number, index: number, total: number) {
-  const windowSize = (TEXT_ZONE_END - TEXT_ZONE_START) / total;
-  const start = TEXT_ZONE_START + index * windowSize;
+const MOBILE = {
+  SCROLL_HEIGHT: "500vh",
+  VIDEO_FORWARD_END: 0.08,
+  TITLE_START: 0.06,
+  TITLE_SOLID: 0.10,
+  TEXT_ZONE_START: 0.13,
+  TEXT_ZONE_END: 0.55,
+  CTA_START: 0.57,
+  CTA_SOLID: 0.63,
+  VIDEO_REVERSE_START: 0.13,
+  VIDEO_REVERSE_END: 0.55,
+};
+
+function getTextStyle(progress: number, index: number, total: number, zoneStart: number, zoneEnd: number) {
+  const windowSize = (zoneEnd - zoneStart) / total;
+  const start = zoneStart + index * windowSize;
   const fadeInEnd = start + windowSize * 0.25;
   const fadeOutStart = start + windowSize * 0.7;
   const end = start + windowSize;
@@ -66,6 +81,11 @@ function getTextStyle(progress: number, index: number, total: number) {
 
 const Home = () => {
   const isMobile = useIsMobile();
+  const cfg = isMobile ? MOBILE : DESKTOP;
+  const cfgRef = useRef(cfg);
+  cfgRef.current = cfg;
+  const isMobileRef = useRef(isMobile);
+  isMobileRef.current = isMobile;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const framesRef = useRef<HTMLImageElement[]>([]);
@@ -142,54 +162,57 @@ const Home = () => {
       if (!running) return;
 
       targetProgress.current = readScroll();
-      const diff = targetProgress.current - smoothProgress.current;
-      const lerpSpeed = isMobile ? LERP_SPEED_MOBILE : LERP_SPEED_DESKTOP;
-      smoothProgress.current += diff * lerpSpeed;
+      const c = cfgRef.current;
+      const mobile = isMobileRef.current;
 
+      const diff = targetProgress.current - smoothProgress.current;
+      const lerp = mobile ? LERP_SPEED_MOBILE : LERP_SPEED_DESKTOP;
+      smoothProgress.current += diff * lerp;
       if (Math.abs(diff) < 0.0001) {
         smoothProgress.current = targetProgress.current;
       }
 
       const p = smoothProgress.current;
+      const fc = framesRef.current.length || 1;
 
       let frameIndex: number;
-      if (p <= VIDEO_FORWARD_END) {
-        const vp = p / VIDEO_FORWARD_END;
-        frameIndex = Math.min(frameCount - 1, Math.floor(vp * (frameCount - 1)));
-      } else if (p >= VIDEO_REVERSE_START && p <= VIDEO_REVERSE_END) {
-        const rp = (p - VIDEO_REVERSE_START) / (VIDEO_REVERSE_END - VIDEO_REVERSE_START);
-        frameIndex = Math.min(frameCount - 1, Math.floor((1 - rp) * (frameCount - 1)));
-      } else if (p > VIDEO_FORWARD_END && p < VIDEO_REVERSE_START) {
-        frameIndex = frameCount - 1;
+      if (p <= c.VIDEO_FORWARD_END) {
+        const vp = p / c.VIDEO_FORWARD_END;
+        frameIndex = Math.min(fc - 1, Math.floor(vp * (fc - 1)));
+      } else if (p >= c.VIDEO_REVERSE_START && p <= c.VIDEO_REVERSE_END) {
+        const rp = (p - c.VIDEO_REVERSE_START) / (c.VIDEO_REVERSE_END - c.VIDEO_REVERSE_START);
+        frameIndex = Math.min(fc - 1, Math.floor((1 - rp) * (fc - 1)));
+      } else if (p > c.VIDEO_FORWARD_END && p < c.VIDEO_REVERSE_START) {
+        frameIndex = fc - 1;
       } else {
         frameIndex = 0;
       }
       drawFrame(frameIndex);
 
-      if (p >= TITLE_START && p < TEXT_ZONE_START) {
-        const t = Math.min(1, (p - TITLE_START) / (TITLE_SOLID - TITLE_START));
+      if (p >= c.TITLE_START && p < c.TEXT_ZONE_START) {
+        const t = Math.min(1, (p - c.TITLE_START) / (c.TITLE_SOLID - c.TITLE_START));
         setTitleOpacity(t);
-      } else if (p >= TEXT_ZONE_START && p < TEXT_ZONE_START + 0.04) {
-        const t = 1 - (p - TEXT_ZONE_START) / 0.04;
+      } else if (p >= c.TEXT_ZONE_START && p < c.TEXT_ZONE_START + 0.04) {
+        const t = 1 - (p - c.TEXT_ZONE_START) / 0.04;
         setTitleOpacity(Math.max(0, t));
       } else {
         setTitleOpacity(0);
       }
 
       const newStyles = textBlocks.map((_, i) =>
-        getTextStyle(p, i, textBlocks.length)
+        getTextStyle(p, i, textBlocks.length, c.TEXT_ZONE_START, c.TEXT_ZONE_END)
       );
       setTextStyles(newStyles);
 
-      if (p >= VIDEO_REVERSE_END) {
-        const t = Math.max(0, 1 - (p - VIDEO_REVERSE_END) / (CTA_START - VIDEO_REVERSE_END));
+      if (p >= c.VIDEO_REVERSE_END) {
+        const t = Math.max(0, 1 - (p - c.VIDEO_REVERSE_END) / (c.CTA_START - c.VIDEO_REVERSE_END));
         setVideoOpacity(t);
       } else {
         setVideoOpacity(1);
       }
 
-      if (p >= CTA_START) {
-        const t = Math.min(1, (p - CTA_START) / (CTA_SOLID - CTA_START));
+      if (p >= c.CTA_START) {
+        const t = Math.min(1, (p - c.CTA_START) / (c.CTA_SOLID - c.CTA_START));
         setCtaOpacity(t);
       } else {
         setCtaOpacity(0);
@@ -212,7 +235,7 @@ const Home = () => {
     <div
       ref={containerRef}
       className="relative w-full"
-      style={{ height: SCROLL_HEIGHT }}
+      style={{ height: cfg.SCROLL_HEIGHT }}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <canvas
@@ -236,7 +259,7 @@ const Home = () => {
           className="absolute inset-0 z-10 flex items-end justify-center pointer-events-none px-4"
           style={{ opacity: titleOpacity }}
         >
-          <div className="pb-44 md:pb-36 w-full text-center">
+          <div className="pb-40 md:pb-36 w-full text-center">
             <GradientText
               className="text-5xl md:text-8xl font-bold uppercase tracking-widest"
               colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
@@ -256,10 +279,10 @@ const Home = () => {
                 key={i}
                 className={`absolute inset-x-0 mx-auto max-w-3xl px-8 text-center ${
                   i === 0
-                    ? "text-base md:text-lg leading-relaxed text-card-foreground"
+                    ? "text-lg md:text-lg leading-relaxed text-card-foreground"
                     : i === textBlocks.length - 1
-                    ? "text-base md:text-lg leading-relaxed text-card-foreground coords"
-                    : "text-base md:text-lg leading-relaxed text-muted-foreground"
+                    ? "text-lg md:text-lg leading-relaxed text-card-foreground coords"
+                    : "text-lg md:text-lg leading-relaxed text-muted-foreground"
                 }`}
                 style={textStyles[i]}
               >
