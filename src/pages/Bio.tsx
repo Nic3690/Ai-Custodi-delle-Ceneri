@@ -194,11 +194,11 @@ const PersonSection = ({
 
   return (
     <div ref={containerRef} style={{ height: "250vh" }}>
-      <section className="sticky top-0 h-screen-safe flex flex-col justify-center pb-20 bg-background px-6">
+      <section className="sticky top-0 h-screen-safe flex flex-col justify-start pt-12 md:justify-center md:pt-0 md:pb-20 bg-background px-4 md:px-6 overflow-hidden">
         <div className="max-w-5xl mx-auto w-full">
 
           <p
-            className="text-sm md:text-base leading-relaxed mb-10 text-center tracking-widest uppercase"
+            className="text-sm md:text-base leading-relaxed mb-4 md:mb-10 text-center tracking-widest uppercase"
             style={{ color: "#ff5657", ...titleStyle }}
           >
             {title}

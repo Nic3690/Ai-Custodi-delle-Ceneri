@@ -14,7 +14,7 @@ const textBlocks = [
 ];
 
 const FRAME_COUNT_DESKTOP = 300;
-const FRAME_COUNT_MOBILE = 100;
+const FRAME_COUNT_MOBILE = 125;
 const SCROLL_HEIGHT = "1000vh";
 const LERP_SPEED = 0.06;
 
@@ -234,7 +234,7 @@ const Home = () => {
           className="absolute inset-0 z-10 flex items-end justify-center pointer-events-none px-4"
           style={{ opacity: titleOpacity }}
         >
-          <div className="pb-28 md:pb-36 w-full text-center">
+          <div className="pb-44 md:pb-36 w-full text-center">
             <GradientText
               className="text-5xl md:text-8xl font-bold uppercase tracking-widest"
               colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
