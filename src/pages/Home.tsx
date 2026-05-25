@@ -272,17 +272,17 @@ const Home = () => {
         </div>
 
         {/* Text blocks — centered, one at a time */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none pt-24 md:pt-32">
+        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none pt-24 pb-16 md:pt-32 md:pb-0">
           <div className="max-w-3xl mx-auto px-8 text-center">
             {textBlocks.map((text, i) => (
               <p
                 key={i}
                 className={`absolute inset-x-0 mx-auto max-w-3xl px-8 text-center ${
                   i === 0
-                    ? "text-lg md:text-lg leading-relaxed text-card-foreground"
+                    ? "text-base md:text-lg leading-relaxed text-card-foreground"
                     : i === textBlocks.length - 1
-                    ? "text-lg md:text-lg leading-relaxed text-card-foreground coords"
-                    : "text-lg md:text-lg leading-relaxed text-muted-foreground"
+                    ? "text-base md:text-lg leading-relaxed text-card-foreground coords"
+                    : "text-base md:text-lg leading-relaxed text-muted-foreground"
                 }`}
                 style={textStyles[i]}
               >
