@@ -16,7 +16,8 @@ const textBlocks = [
 const FRAME_COUNT_DESKTOP = 300;
 const FRAME_COUNT_MOBILE = 125;
 const SCROLL_HEIGHT = "1000vh";
-const LERP_SPEED = 0.06;
+const LERP_SPEED_DESKTOP = 0.06;
+const LERP_SPEED_MOBILE = 0.15;
 
 const VIDEO_FORWARD_END = 0.22;
 const TITLE_START = 0.19;
@@ -142,7 +143,8 @@ const Home = () => {
 
       targetProgress.current = readScroll();
       const diff = targetProgress.current - smoothProgress.current;
-      smoothProgress.current += diff * LERP_SPEED;
+      const lerpSpeed = isMobile ? LERP_SPEED_MOBILE : LERP_SPEED_DESKTOP;
+      smoothProgress.current += diff * lerpSpeed;
 
       if (Math.abs(diff) < 0.0001) {
         smoothProgress.current = targetProgress.current;
