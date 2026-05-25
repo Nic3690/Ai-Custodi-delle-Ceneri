@@ -16,7 +16,7 @@ const textBlocks = [
 const FRAME_COUNT_DESKTOP = 300;
 const FRAME_COUNT_MOBILE = 125;
 const LERP_SPEED_DESKTOP = 0.06;
-const LERP_SPEED_MOBILE = 0.3;
+const LERP_SPEED_MOBILE = 0.12;
 
 const DESKTOP = {
   SCROLL_HEIGHT: "1000vh",
@@ -32,16 +32,16 @@ const DESKTOP = {
 };
 
 const MOBILE = {
-  SCROLL_HEIGHT: "500vh",
-  VIDEO_FORWARD_END: 0.08,
-  TITLE_START: 0.06,
-  TITLE_SOLID: 0.10,
-  TEXT_ZONE_START: 0.13,
-  TEXT_ZONE_END: 0.55,
-  CTA_START: 0.57,
-  CTA_SOLID: 0.63,
-  VIDEO_REVERSE_START: 0.13,
-  VIDEO_REVERSE_END: 0.55,
+  SCROLL_HEIGHT: "400vh",
+  VIDEO_FORWARD_END: 0.10,
+  TITLE_START: 0.08,
+  TITLE_SOLID: 0.12,
+  TEXT_ZONE_START: 0.15,
+  TEXT_ZONE_END: 0.70,
+  CTA_START: 0.73,
+  CTA_SOLID: 0.80,
+  VIDEO_REVERSE_START: 0.15,
+  VIDEO_REVERSE_END: 0.70,
 };
 
 function getTextStyle(progress: number, index: number, total: number, zoneStart: number, zoneEnd: number) {
@@ -294,7 +294,7 @@ const Home = () => {
 
         {/* CTA */}
         <div
-          className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto"
+          className="absolute inset-0 z-10 flex items-center justify-center pb-16 md:pb-0 pointer-events-auto"
           style={{ opacity: ctaOpacity }}
         >
           <Link
