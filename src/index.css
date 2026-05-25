@@ -2,6 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+
+@keyframes title-glow {
+  0%, 100% {
+    opacity: 0.6;
+    filter: brightness(0.8);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+}
+
+.animate-title-glow {
+  animation: fade-in-up 1s ease-out forwards, title-glow 4s ease-in-out 1.5s infinite;
+}
+
+@keyframes scroll-dot {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.scroll-indicator {
+  width: 24px;
+  height: 40px;
+  border: 2px solid currentColor;
+  border-radius: 12px;
+  position: relative;
+  opacity: 0.5;
+}
+
+.scroll-indicator::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scroll-dot 1.8s ease-out infinite;
+}
+
 /* Equinox font for titles */
 @font-face {
   font-family: 'Equinox';
@@ -25,7 +91,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 8%;
+    --background: 0 0% 2.7%;
     --foreground: 184 44% 81%;
 
     --card: 0 0% 8%;
@@ -558,33 +624,13 @@ All colors MUST be HSL.
     font-family: 'Space Mono', monospace;
   }
 
-  /* Grid overlay pattern */
-  .grid-overlay {
-    position: relative;
+  /* Dynamic viewport height for iOS */
+  .h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
   }
 
-  .grid-overlay::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 50px,
-        hsl(181 69% 44% / 0.08) 50px,
-        hsl(181 69% 44% / 0.08) 51px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 50px,
-        hsl(181 69% 44% / 0.08) 50px,
-        hsl(181 69% 44% / 0.08) 51px
-      );
-    pointer-events: none;
-    z-index: 1;
-  }
+  /* Grid overlay — now handled by GridOverlay component */
 
   /* Underline animation */
   .link-underline {
@@ -663,6 +709,7 @@ All colors MUST be HSL.
     animation: blob 3s ease-in-out infinite;
     filter: blur(0.5px);
   }
+
 }
 
 @layer base {

@@ -1,115 +1,288 @@
-import { lazy, Suspense } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import GradientText from "@/components/text/GradientText";
-import Typewriter from "@/components/text/Typewriter";
+import ScrollIndicator from "@/components/ScrollIndicator";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const LiquidEther = lazy(() => import("@/components/backgrounds/LiquidEther"));
+const textBlocks = [
+  "Questa è una storia costruita per frammenti.",
+  "La storia dell'umanità nell'arco di più di due secoli. Da domani al XXIII secolo. Ogni frammento è un racconto, ogni racconto è ambientato in un tempo e in un luogo diversi.",
+  "Cambiamenti climatici, guerre per le risorse, migrazioni di massa e altri disastri spingono i popoli verso i poli del pianeta, ma soprattutto verso l'orbita terrestre, la Luna e infine Marte.",
+  "Ma, ahimè, è impossibile fuggire da se stessi, e l'umanità porta via con sé l'egoismo e le paure che l'hanno sempre accompagnata, e forse sempre lo faranno.",
+  "Così le colonie spaziali crescono avidamente e si arricchiscono a discapito del pianeta, fino a rendersi indipendenti e metterlo in scacco. Un nuovo equilibrio sembra essersi stabilito dopo una crisi che sembrava senza fine.",
+  "Finché…",
+];
 
-// Typing speed in ms per character
-const TYPING_SPEED = 15;
-// Buffer between paragraphs in ms
-const BUFFER = 800;
+const FRAME_COUNT_DESKTOP = 300;
+const FRAME_COUNT_MOBILE = 100;
+const SCROLL_HEIGHT = "1000vh";
+const LERP_SPEED = 0.06;
 
-// Calculate delay based on when previous text finishes
-const calcDelay = (prevDelay: number, prevTextLength: number): number => {
-  return prevDelay + (prevTextLength * TYPING_SPEED) + BUFFER;
-};
+const VIDEO_FORWARD_END = 0.22;
+const TITLE_START = 0.19;
+const TITLE_SOLID = 0.25;
+const TEXT_ZONE_START = 0.28;
+const TEXT_ZONE_END = 0.68;
+const CTA_START = 0.70;
+const CTA_SOLID = 0.76;
+const VIDEO_REVERSE_START = 0.28;
+const VIDEO_REVERSE_END = 0.68;
 
-// Text content
-const texts = {
-  t1: "Questa è una storia costruita per frammenti.",
-  t2: "La storia dell'umanità nell'arco di più di due secoli. Da oggi al XXIII secolo. Ogni frammento è un racconto, ogni racconto è ambientato in un tempo e in un luogo diverso.",
-  t3: "Cambiamento climatico, guerre per le risorse, migrazioni di massa e altri disastri spingeranno i popoli verso i poli del pianeta, ma soprattutto verso l'orbita terrestre, la luna e infine Marte.",
-  t4: "Ma aimè non si può scappare da se stessi, e l'umanità porta via con sé l'egoismo e le paure che l'hanno sempre accompagnata, e forse sempre lo faranno.",
-  t5: "Così le colonie spaziali crescono avidamente e si arricchiscono a discapito del pianeta, fino a rendersi indipendenti e metterlo in scacco. Un nuovo equilibrio sembra essersi stabilito dopo una crisi che sembrava senza fine.",
-  t6: "Finché…",
-};
+function getTextStyle(progress: number, index: number, total: number) {
+  const windowSize = (TEXT_ZONE_END - TEXT_ZONE_START) / total;
+  const start = TEXT_ZONE_START + index * windowSize;
+  const fadeInEnd = start + windowSize * 0.25;
+  const fadeOutStart = start + windowSize * 0.7;
+  const end = start + windowSize;
 
-// Calculate sequential delays
-const d1 = 300;
-const d2 = calcDelay(d1, texts.t1.length);
-const d3 = calcDelay(d2, texts.t2.length);
-const d4 = calcDelay(d3, texts.t3.length);
-const d5 = calcDelay(d4, texts.t4.length);
-const d6 = calcDelay(d5, texts.t5.length);
+  let opacity = 0;
+  let y = 30;
+
+  if (progress < start) {
+    opacity = 0;
+    y = 30;
+  } else if (progress < fadeInEnd) {
+    const t = (progress - start) / (fadeInEnd - start);
+    opacity = t;
+    y = 30 * (1 - t);
+  } else if (progress < fadeOutStart) {
+    opacity = 1;
+    y = 0;
+  } else if (progress < end) {
+    const t = (progress - fadeOutStart) / (end - fadeOutStart);
+    opacity = 1 - t;
+    y = -20 * t;
+  } else {
+    opacity = 0;
+    y = -20;
+  }
+
+  return {
+    opacity,
+    transform: `translateY(${y}px)`,
+  };
+}
 
 const Home = () => {
   const isMobile = useIsMobile();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const framesRef = useRef<HTMLImageElement[]>([]);
+  const lastFrameIdx = useRef(-1);
+  const smoothProgress = useRef(0);
+  const targetProgress = useRef(0);
+  const [titleOpacity, setTitleOpacity] = useState(0);
+  const [textStyles, setTextStyles] = useState(
+    textBlocks.map(() => ({ opacity: 0, transform: "translateY(30px)" }))
+  );
+  const [ctaOpacity, setCtaOpacity] = useState(0);
+  const [videoOpacity, setVideoOpacity] = useState(1);
+
+  const frameCount = isMobile ? FRAME_COUNT_MOBILE : FRAME_COUNT_DESKTOP;
+  const framePath = isMobile ? "/images/luna-frames-mobile" : "/images/luna-frames";
+
+  useEffect(() => {
+    const frames: HTMLImageElement[] = [];
+    for (let i = 1; i <= frameCount; i++) {
+      const img = new Image();
+      img.src = `${framePath}/${String(i).padStart(4, "0")}.jpg`;
+      frames.push(img);
+    }
+    framesRef.current = frames;
+  }, [frameCount, framePath]);
+
+  const drawFrame = useCallback((index: number) => {
+    if (index === lastFrameIdx.current) return;
+    const canvas = canvasRef.current;
+    const frame = framesRef.current[index];
+    if (!canvas || !frame || !frame.complete || !frame.naturalWidth) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.offsetWidth * dpr;
+    const h = canvas.offsetHeight * dpr;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+
+    const scale = Math.max(w / frame.naturalWidth, h / frame.naturalHeight);
+    const fw = frame.naturalWidth * scale;
+    const fh = frame.naturalHeight * scale;
+    ctx.drawImage(frame, (w - fw) / 2, (h - fh) / 2, fw, fh);
+    lastFrameIdx.current = index;
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const scrollEl: HTMLElement | Window =
+      container.closest("main") || window;
+
+    let animId: number;
+    let running = true;
+
+    const readScroll = () => {
+      const rect = container.getBoundingClientRect();
+      const viewportH =
+        scrollEl === window
+          ? window.innerHeight
+          : (scrollEl as HTMLElement).clientHeight;
+      const scrollable = container.offsetHeight - viewportH;
+      if (scrollable <= 0) return 0;
+      const scrolled = -rect.top;
+      return Math.max(0, Math.min(1, scrolled / scrollable));
+    };
+
+    const tick = () => {
+      if (!running) return;
+
+      targetProgress.current = readScroll();
+      const diff = targetProgress.current - smoothProgress.current;
+      smoothProgress.current += diff * LERP_SPEED;
+
+      if (Math.abs(diff) < 0.0001) {
+        smoothProgress.current = targetProgress.current;
+      }
+
+      const p = smoothProgress.current;
+
+      let frameIndex: number;
+      if (p <= VIDEO_FORWARD_END) {
+        const vp = p / VIDEO_FORWARD_END;
+        frameIndex = Math.min(frameCount - 1, Math.floor(vp * (frameCount - 1)));
+      } else if (p >= VIDEO_REVERSE_START && p <= VIDEO_REVERSE_END) {
+        const rp = (p - VIDEO_REVERSE_START) / (VIDEO_REVERSE_END - VIDEO_REVERSE_START);
+        frameIndex = Math.min(frameCount - 1, Math.floor((1 - rp) * (frameCount - 1)));
+      } else if (p > VIDEO_FORWARD_END && p < VIDEO_REVERSE_START) {
+        frameIndex = frameCount - 1;
+      } else {
+        frameIndex = 0;
+      }
+      drawFrame(frameIndex);
+
+      if (p >= TITLE_START && p < TEXT_ZONE_START) {
+        const t = Math.min(1, (p - TITLE_START) / (TITLE_SOLID - TITLE_START));
+        setTitleOpacity(t);
+      } else if (p >= TEXT_ZONE_START && p < TEXT_ZONE_START + 0.04) {
+        const t = 1 - (p - TEXT_ZONE_START) / 0.04;
+        setTitleOpacity(Math.max(0, t));
+      } else {
+        setTitleOpacity(0);
+      }
+
+      const newStyles = textBlocks.map((_, i) =>
+        getTextStyle(p, i, textBlocks.length)
+      );
+      setTextStyles(newStyles);
+
+      if (p >= VIDEO_REVERSE_END) {
+        const t = Math.max(0, 1 - (p - VIDEO_REVERSE_END) / (CTA_START - VIDEO_REVERSE_END));
+        setVideoOpacity(t);
+      } else {
+        setVideoOpacity(1);
+      }
+
+      if (p >= CTA_START) {
+        const t = Math.min(1, (p - CTA_START) / (CTA_SOLID - CTA_START));
+        setCtaOpacity(t);
+      } else {
+        setCtaOpacity(0);
+      }
+
+      animId = requestAnimationFrame(tick);
+    };
+
+    animId = requestAnimationFrame(tick);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(animId);
+    };
+  }, [drawFrame]);
 
   return (
-    <div className="relative min-h-full flex items-center justify-center overflow-hidden">
-      {/* Liquid Ether Background - hidden on mobile */}
-      {!isMobile && (
-        <Suspense fallback={null}>
-          <div className="absolute inset-0">
-            <LiquidEther
-              colors={["#326266", "#23babd", "#b7e2e5"]}
-              mouseForce={35}
-              cursorSize={200}
-              resolution={0.4}
-              autoIntensity={3.5}
-              autoSpeed={0.8}
-              isViscous={false}
-              iterationsPoisson={12}
-              BFECC={false}
-              targetFPS={30}
-              className="w-full h-full"
-            />
-          </div>
-        </Suspense>
-      )}
+    <>
+    <ScrollIndicator />
+    <div
+      ref={containerRef}
+      className="relative w-full"
+      style={{ height: SCROLL_HEIGHT }}
+    >
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full"
+          style={{ opacity: videoOpacity }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "hsl(0 0% 8% / 0.35)" }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent, hsl(0 0% 8%))",
+          }}
+        />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-12 md:py-16 text-center">
-        <div className="max-w-4xl mx-auto">
-          <GradientText
-            className="text-5xl md:text-8xl font-bold mb-12 uppercase tracking-widest"
-            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
-            animationSpeed={6}
-            style={{ fontFamily: "'Equinox', sans-serif" }}
-          >
-            AI CUSTODI DELLE CENERI
-          </GradientText>
+        {/* Title */}
+        <div
+          className="absolute inset-0 z-10 flex items-end justify-center pointer-events-none px-4"
+          style={{ opacity: titleOpacity }}
+        >
+          <div className="pb-28 md:pb-36 w-full text-center">
+            <GradientText
+              className="text-5xl md:text-8xl font-bold uppercase tracking-widest"
+              colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+              animationSpeed={6}
+              style={{ fontFamily: "'Equinox', sans-serif" }}
+            >
+              AI CUSTODI DELLE CENERI
+            </GradientText>
+          </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-8">
-          <p className="text-sm md:text-base leading-relaxed mb-14 text-card-foreground text-center data-line">
-            <Typewriter text={texts.t1} delay={d1} eager={isMobile} />
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 mb-14 text-left">
-            <div className="space-y-6">
-              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t2} delay={d2} eager={isMobile} />
+        {/* Text blocks — centered, one at a time */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none pt-24 md:pt-32">
+          <div className="max-w-3xl mx-auto px-8 text-center">
+            {textBlocks.map((text, i) => (
+              <p
+                key={i}
+                className={`absolute inset-x-0 mx-auto max-w-3xl px-8 text-center ${
+                  i === 0
+                    ? "text-base md:text-lg leading-relaxed text-card-foreground"
+                    : i === textBlocks.length - 1
+                    ? "text-base md:text-lg leading-relaxed text-card-foreground coords"
+                    : "text-base md:text-lg leading-relaxed text-muted-foreground"
+                }`}
+                style={textStyles[i]}
+              >
+                {text}
               </p>
-
-              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t3} delay={d3} eager={isMobile} />
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t4} delay={d4} eager={isMobile} />
-              </p>
-
-              <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                <Typewriter text={texts.t5} delay={d5} eager={isMobile} />
-              </p>
-            </div>
+            ))}
           </div>
+        </div>
 
-          <p className="text-sm md:text-base leading-relaxed text-card-foreground text-center coords mb-12">
-            <Typewriter text={texts.t6} delay={d6} eager={isMobile} />
-          </p>
-
-          <Link to="/stories" className="text-2xl tracking-wide font-mono blink-cursor text-center hover:opacity-80 transition-opacity" style={{ color: '#ff5657' }}>
+        {/* CTA */}
+        <div
+          className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto"
+          style={{ opacity: ctaOpacity }}
+        >
+          <Link
+            to="/stories"
+            className="text-2xl tracking-wide font-mono blink-cursor text-center hover:opacity-80 transition-opacity"
+            style={{ color: "#ff5657" }}
+          >
             Scopri gli E-Book
           </Link>
         </div>
       </div>
     </div>
+    </>
   );
 };
 

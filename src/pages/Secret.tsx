@@ -6,7 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Secret = () => {
   const isMobile = useIsMobile();
   return (
-    <div className="min-h-full flex items-center justify-center">
+    <div className="h-full flex items-center justify-center overflow-hidden">
       <div className="container mx-auto px-4 py-12 md:py-16 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12">
@@ -14,7 +14,7 @@ const Secret = () => {
           </div>
 
           <GradientText
-            className="text-5xl md:text-7xl font-bold mb-8 uppercase tracking-widest"
+            className="text-2xl sm:text-4xl md:text-7xl font-bold mb-8 uppercase tracking-widest"
             colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
             animationSpeed={6}
             style={{ fontFamily: "'Equinox', sans-serif" }}

@@ -1,141 +1,157 @@
+import { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, User } from "lucide-react";
+import { ArrowRight, ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import GradientText from "@/components/text/GradientText";
+import ScrollIndicator from "@/components/ScrollIndicator";
+import { artworks, countTavole } from "@/data/artworks";
 
-interface ArtistLink {
-  name: string;
-  link: string;
+function revealStyle(progress: number, start: number, end: number) {
+  const t = Math.max(0, Math.min(1, (progress - start) / (end - start)));
+  return {
+    opacity: t,
+    transform: `translateY(${30 * (1 - t)}px)`,
+  };
 }
-
-interface Piece {
-  title: string;
-  artists: ArtistLink[];
-  description: string;
-  image?: string | null;
-}
-
-interface StoryArt {
-  story: string;
-  pieces: Piece[];
-}
-
-const artworks: StoryArt[] = [
-  {
-    story: "La Grande Pesca",
-    pieces: [
-      {
-        title: "La prima collaborazione non si scorda mai",
-        artists: [
-          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art?igsh=d2J0dWNrN3kwMmx2" },
-        ],
-        description: "Due illustrazioni a quattro mani per un racconto breve",
-        image: "/images/tav_2.png",
-      },
-    ],
-  },
-  {
-    story: "La Stazione del Ritorno",
-    pieces: [
-      {
-        title: "Due illustrazioni a quattro mani per un racconto breve",
-        artists: [
-          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art?igsh=d2J0dWNrN3kwMmx2" },
-          { name: "Luca Picone", link: "https://www.instagram.com/luca.zowie?igsh=MWx0Nm1pczFud2Fidg==" },
-        ],
-        description: "",
-        image: null,
-      },
-    ],
-  },
-];
 
 const Gallery = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [subtitleStyle, setSubtitleStyle] = useState<React.CSSProperties>({ opacity: 0, transform: "translateY(30px)" });
+  const [cardsStyle, setCardsStyle] = useState<React.CSSProperties>({ opacity: 0, transform: "translateY(30px)" });
+  const [footerStyle, setFooterStyle] = useState<React.CSSProperties>({ opacity: 0, transform: "translateY(30px)" });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const scrollEl: HTMLElement | Window = container.closest("main") || window;
+    let rafId: number | null = null;
+
+    const update = () => {
+      const rect = container.getBoundingClientRect();
+      const viewportH =
+        scrollEl === window
+          ? window.innerHeight
+          : (scrollEl as HTMLElement).clientHeight;
+      const scrollable = container.offsetHeight - viewportH;
+      if (scrollable <= 0) return;
+      const scrolled = -rect.top;
+      const p = Math.max(0, Math.min(1, scrolled / scrollable));
+
+      setSubtitleStyle(revealStyle(p, 0, 0.15));
+      setCardsStyle(revealStyle(p, 0.1, 0.4));
+      setFooterStyle(revealStyle(p, 0.4, 0.6));
+    };
+
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        update();
+      });
+    };
+
+    scrollEl.addEventListener("scroll", onScroll, { passive: true });
+    update();
+
+    return () => {
+      scrollEl.removeEventListener("scroll", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
-    <div className="container mx-auto px-4 py-12 md:py-16">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-6">
-          <GradientText
-            className="text-4xl md:text-6xl font-bold uppercase tracking-widest"
-            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
-            animationSpeed={6}
-            style={{ fontFamily: "'Equinox', sans-serif" }}
-          >
-            GALLERIA
-          </GradientText>
-        </div>
+    <div>
+      <ScrollIndicator />
 
-        <p className="text-center text-muted-foreground mb-12 text-lg">
-          Interpretazioni visive ispirate agli scritti della saga.
-        </p>
+      {/* Page title — CSS animation on mount */}
+      <div className="pt-8 md:pt-12 pb-4 text-center animate-fade-in-up">
+        <GradientText
+          className="text-3xl sm:text-4xl md:text-7xl font-bold uppercase tracking-widest"
+          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          animationSpeed={6}
+          style={{ fontFamily: "'Equinox', sans-serif" }}
+        >
+          GALLERIA
+        </GradientText>
+      </div>
 
-        <div className="space-y-12">
-          {artworks.map((storyArt, storyIndex) => (
-            <div key={storyIndex}>
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary border-l-4 border-primary pl-4">
-                {storyArt.story}
-              </h2>
+      {/* Content — scroll reveal */}
+      <div ref={containerRef} style={{ height: "125vh" }}>
+        <div className="sticky top-0 h-screen-safe flex flex-col justify-center pt-16 bg-background px-6">
+          <div className="max-w-6xl mx-auto w-full">
+            <p className="text-center text-muted-foreground mb-12 text-lg" style={subtitleStyle}>
+              Interpretazioni visive ispirate agli scritti della saga.
+            </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {storyArt.pieces.map((piece, pieceIndex) => (
-                  <Card
-                    key={pieceIndex}
-                    className="bg-card border-border hover:border-primary transition-all duration-300 group"
-                  >
-                    <div className="h-64 bg-muted border-b border-border flex items-center justify-center overflow-hidden">
-                      {piece.image ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={cardsStyle}>
+              {artworks.map((storyArt) => {
+                const tavoleCount = countTavole(storyArt);
+                const hasContent = tavoleCount > 0;
+
+                const card = (
+                  <Card className="bg-card border-border hover:border-primary transition-all duration-300 group h-full flex flex-col overflow-hidden">
+                    <div className="aspect-[4/3] bg-muted overflow-hidden relative">
+                      {storyArt.cover ? (
                         <img
-                          src={piece.image}
-                          alt={piece.title}
+                          src={storyArt.cover}
+                          alt={storyArt.story}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
-                        <p className="text-muted-foreground font-mono text-sm">
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground font-mono text-sm">
                           // DATI IN ARRIVO
-                        </p>
+                        </div>
                       )}
+                      <span className="absolute top-2 right-2 text-xs font-mono px-2 py-1 bg-background/80 flex items-center gap-1">
+                        <ImageIcon className="h-3 w-3" />
+                        {tavoleCount} {tavoleCount === 1 ? "tavola" : "tavole"}
+                      </span>
                     </div>
-
                     <CardHeader>
                       <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                        {piece.title}
+                        {storyArt.story}
                       </CardTitle>
-                      {piece.description && (
-                        <CardDescription>
-                          {piece.description}
-                        </CardDescription>
-                      )}
+                      <CardDescription>
+                        {storyArt.pieces.length} {storyArt.pieces.length === 1 ? "collaborazione" : "collaborazioni"}
+                      </CardDescription>
                     </CardHeader>
-
-                    <CardContent>
-                      {piece.artists.map((artist, artistIndex) => (
-                        <a
-                          key={artistIndex}
-                          href={artist.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-1 last:mb-0"
-                        >
-                          <User className="h-4 w-4" />
-                          <span>{artist.name}</span>
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      ))}
+                    <CardContent className="mt-auto">
+                      {hasContent ? (
+                        <span className="inline-flex items-center gap-2 text-primary group-hover:gap-3 transition-all font-mono text-sm">
+                          Visualizza tavole
+                          <ArrowRight className="h-4 w-4" />
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground font-mono text-sm">
+                          In arrivo
+                        </span>
+                      )}
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                );
 
-        <div className="mt-16 text-center p-8">
-          <p className="text-lg text-card-foreground mb-4">
-            Vuoi contribuire con le tue opere?
-          </p>
-          <Link to="/contacts" className="text-primary hover:text-primary/80 transition-colors">
-            Contattami per collaborare
-          </Link>
+                return hasContent ? (
+                  <Link key={storyArt.slug} to={`/gallery/${storyArt.slug}`} className="block" style={{ pointerEvents: cardsStyle.opacity === 0 ? "none" : "auto" }}>
+                    {card}
+                  </Link>
+                ) : (
+                  <div key={storyArt.slug} className="opacity-70 cursor-not-allowed">
+                    {card}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-16 text-center" style={footerStyle}>
+              <p className="text-lg text-card-foreground mb-4">
+                Vuoi contribuire con le tue opere?
+              </p>
+              <Link to="/contacts" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
+                Contattami per collaborare
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

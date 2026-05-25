@@ -9,6 +9,7 @@ import Bio from "./pages/Bio";
 import Stories from "./pages/Stories";
 import Secret from "./pages/Secret";
 import Gallery from "./pages/Gallery";
+import StoryGallery from "./pages/StoryGallery";
 import Contacts from "./pages/Contacts";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/stories" element={<Stories />} />
             <Route path="/secret" element={<Secret />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/gallery/:slug" element={<StoryGallery />} />
             <Route path="/contacts" element={<Contacts />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

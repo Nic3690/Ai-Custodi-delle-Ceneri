@@ -13,7 +13,7 @@ interface TypewriterProps {
   eager?: boolean;
 }
 
-const Typewriter = ({ text, speed = 15, delay = 0, className = "", storageKey, eager = false }: TypewriterProps) => {
+const Typewriter = ({ text, speed = 7, delay = 0, className = "", storageKey, eager = false }: TypewriterProps) => {
   const effectiveKey = useMemo(() => {
     return storageKey || `typewriter_${text.slice(0, 30)}`;
   }, [storageKey, text]);
