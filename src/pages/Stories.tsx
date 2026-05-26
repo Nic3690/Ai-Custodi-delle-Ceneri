@@ -33,7 +33,7 @@ const stories: Story[] = [
     title: "La grande pesca",
     description: `"Si ricordò che era venuto fin lì non per vedere ciò che già sapeva, ma per andare oltre."`,
     annoStesura: "2022",
-    primaEdizione: "2025",
+    primaEdizione: "2026",
     pages: "45 pagine",
     image: "/images/la_grande_pesca.png",
     pdf: "/ebooks/la-grande-pesca.pdf",

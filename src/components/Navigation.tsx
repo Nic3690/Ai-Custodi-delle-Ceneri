@@ -1,7 +1,7 @@
 import { Orbit, Fingerprint, ScrollText, Lock, Aperture, Radio } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
-import LogoNaq from "@/assets/Logo_Naq.png";
+import LogoNaq from "@/assets/logo.png";
 import {
   Sidebar,
   SidebarContent,

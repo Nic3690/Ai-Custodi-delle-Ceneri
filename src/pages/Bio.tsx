@@ -195,6 +195,7 @@ const persons: PersonData[] = [
     title: "Elisa Guglielmi",
     photo: "/images/bio/elisa.jpg",
     alt: "Elisa Guglielmi",
+    objectPosition: "top",
     bio: [
       "Classe 1995, si forma principalmente tra la capitale e il nord della Francia. Il percorso di studi universitario in Lingue, Letterature straniere e Traduzione e la successiva specializzazione nei mestieri dell'Editoria e della Grafica editoriale le consentono di approfondire, dal punto di vista teorico e pratico, le discipline che maggiormente stimolano la sua curiosità e i suoi interessi. Dopo diversi anni di professione nella redazione di un'agenzia letteraria, avvia il proprio service CoLibrì servizi editoriali tramite il quale affianca autori e autrici di tutta Italia nella realizzazione, pubblicazione e promozione dei loro libri.",
     ],
@@ -350,7 +351,7 @@ const DesktopBio = () => {
       {persons.map((person, i) => (
         <div
           key={i}
-          className="absolute inset-0 flex items-start md:items-center justify-center px-4 md:px-6 pt-10 md:pt-8"
+          className="absolute inset-0 flex items-start justify-center px-4 md:px-6 pt-10 md:pt-8"
           style={{
             opacity: sections[i].containerOpacity,
             pointerEvents:

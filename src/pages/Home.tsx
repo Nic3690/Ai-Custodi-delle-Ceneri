@@ -27,7 +27,7 @@ const DESKTOP = {
   VIDEO_REVERSE_START: 0.28,
   VIDEO_REVERSE_END: 0.68,
   SNAP_ANIM_BASE: 800,
-  SNAP_ANIM_RATE: 3000,
+  SNAP_ANIM_RATE: 6000,
 };
 
 const MOBILE = {
@@ -41,7 +41,7 @@ const MOBILE = {
   VIDEO_REVERSE_START: 0.15,
   VIDEO_REVERSE_END: 0.70,
   SNAP_ANIM_BASE: 600,
-  SNAP_ANIM_RATE: 2500,
+  SNAP_ANIM_RATE: 5000,
 };
 
 function getTextStyle(
@@ -303,7 +303,7 @@ const Home = () => {
           1,
           (p - c.TITLE_START) / (c.TITLE_SOLID - c.TITLE_START)
         );
-        setTitleOpacity(t);
+        setTitleOpacity(t * t * t);
       } else if (p >= c.TEXT_ZONE_START && p < c.TEXT_ZONE_START + 0.02) {
         const t = 1 - (p - c.TEXT_ZONE_START) / 0.02;
         setTitleOpacity(Math.max(0, t));

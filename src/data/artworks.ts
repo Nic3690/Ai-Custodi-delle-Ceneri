@@ -31,11 +31,10 @@ export const artworks: StoryArt[] = [
         description: "",
         images: [
           "/images/la_grande_pesca/IMG_0587.webp",
+          "/images/la_grande_pesca/IMG_0592.webp",
+          "/images/la_grande_pesca/IMG_0603.webp",
           "/images/la_grande_pesca/IMG_0589.webp",
           "/images/la_grande_pesca/IMG_0590.webp",
-          "/images/la_grande_pesca/IMG_0591.webp",
-          "/images/la_grande_pesca/IMG_0592.webp",
-          "/images/la_grande_pesca/IMG_0602.webp",
         ],
       },
     ],
