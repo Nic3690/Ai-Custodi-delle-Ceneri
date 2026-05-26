@@ -26,10 +26,10 @@ const Contacts = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-6">
           <GradientText
-            className="text-4xl md:text-6xl font-bold uppercase tracking-widest"
+            className="text-3xl md:text-5xl font-bold uppercase tracking-widest"
             colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
             animationSpeed={6}
-            style={{ fontFamily: "'Equinox', sans-serif" }}
+            style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
           >
             CONTATTI
           </GradientText>

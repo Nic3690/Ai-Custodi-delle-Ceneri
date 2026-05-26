@@ -114,19 +114,12 @@
   animation: scroll-dot 1.8s ease-out infinite;
 }
 
-/* Equinox font for titles */
+/* Bruno Ace SC font for titles (SIL Open Font License) */
 @font-face {
-  font-family: 'Equinox';
-  src: url('/fonts/Webfonts/Equinox Regular.woff') format('woff');
+  font-family: 'Bruno Ace SC';
+  src: url('/fonts/Webfonts/BrunoAceSC-Regular.woff2') format('woff2'),
+       url('/fonts/Webfonts/BrunoAceSC-Regular.woff') format('woff');
   font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Equinox';
-  src: url('/fonts/Webfonts/Equinox Bold.woff') format('woff');
-  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -193,7 +186,7 @@ All colors MUST be HSL.
   }
 
   h1, h2, h3 {
-    font-family: 'Equinox', sans-serif;
+    font-family: 'Bruno Ace SC', sans-serif;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }

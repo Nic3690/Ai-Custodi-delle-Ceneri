@@ -132,7 +132,7 @@ const DesktopStories = () => {
 
   const snapIndex = useSnapScroll(containerRef, STORIES_SNAPS, (p) => {
     setTitleStyle(
-      p > 0.5 ? { opacity: Math.max(0, 1 - (p - 0.5) / 0.25) } : {}
+      p > 0.25 ? { opacity: Math.max(0, 1 - (p - 0.25) / 0.25) } : {}
     );
     setContentStyle(revealStyle(p, 0.5, 1.0));
   }, { freeAfterLast: true });
@@ -147,10 +147,10 @@ const DesktopStories = () => {
         style={{ height: "calc(100dvh - 5rem)", ...titleStyle }}
       >
         <GradientText
-          className="text-3xl sm:text-4xl md:text-7xl font-bold uppercase tracking-widest"
+          className="text-2xl sm:text-3xl md:text-6xl font-bold uppercase tracking-widest"
           colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Equinox', sans-serif" }}
+          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
         >
           E-BOOK
         </GradientText>
@@ -205,13 +205,12 @@ const Stories = () => {
 
   return (
     <div>
-      <ScrollIndicator />
       <div className="pt-8 pb-4 text-center animate-fade-in-up">
         <GradientText
-          className="text-3xl sm:text-4xl font-bold uppercase tracking-widest"
+          className="text-2xl sm:text-3xl font-bold uppercase tracking-widest"
           colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Equinox', sans-serif" }}
+          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
         >
           E-BOOK
         </GradientText>

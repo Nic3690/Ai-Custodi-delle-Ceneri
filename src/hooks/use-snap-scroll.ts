@@ -147,6 +147,7 @@ export function useSnapScroll(
         if (t >= 1) {
           isAnimating.current = false;
           progressRef.current = animTo.current;
+
           cooldownUntil.current = performance.now() + COOLDOWN_MS;
         }
 

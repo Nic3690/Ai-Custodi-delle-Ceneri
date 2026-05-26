@@ -38,7 +38,7 @@ export function Navigation() {
         <div className={`border-b border-primary/30 border-build-bottom flex items-center h-20 ${open ? "px-6 justify-start gap-3" : "justify-center"}`} style={{ animationDelay: "0.1s" }}>
           <img src={LogoNaq} alt="NAQ EVIUS Logo" className={`${open ? "h-8" : "h-6"}`} />
           {open && (
-            <h2 className="font-bold text-primary text-2xl" style={{ fontFamily: "'Equinox', sans-serif" }}>
+            <h2 className="font-bold text-primary text-xl" style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}>
               NAQ EVIUS
             </h2>
           )}

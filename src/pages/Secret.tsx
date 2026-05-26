@@ -15,10 +15,10 @@ const Secret = () => {
             </div>
 
             <GradientText
-              className="text-2xl sm:text-4xl md:text-7xl font-bold mb-4 md:mb-8 uppercase tracking-widest"
+              className="text-lg sm:text-2xl md:text-4xl font-bold mb-4 md:mb-8 uppercase tracking-widest whitespace-nowrap"
               colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
               animationSpeed={6}
-              style={{ fontFamily: "'Equinox', sans-serif" }}
+              style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
             >
               [RICHIESTA RESPINTA]
             </GradientText>

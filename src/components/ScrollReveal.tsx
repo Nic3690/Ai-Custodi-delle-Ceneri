@@ -10,7 +10,7 @@ export function ScrollReveal({
   const ref = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState({
     opacity: 0,
-    transform: "translateY(40px)",
+    transform: "translateY(20px)",
   });
 
   useEffect(() => {
@@ -28,11 +28,11 @@ export function ScrollReveal({
           : (scrollEl as HTMLElement).clientHeight;
 
       const entry = rect.top / viewportH;
-      const progress = Math.max(0, Math.min(1, (1 - entry) / 0.5));
+      const progress = Math.max(0, Math.min(1, (1 - entry) / 0.9));
 
       setStyle({
         opacity: progress,
-        transform: `translateY(${40 * (1 - progress)}px)`,
+        transform: `translateY(${20 * (1 - progress)}px)`,
       });
     };
 

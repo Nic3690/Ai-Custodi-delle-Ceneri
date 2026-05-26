@@ -274,6 +274,7 @@ const Home = () => {
         if (t >= 1) {
           isAnimating.current = false;
           smoothProgress.current = animTo.current;
+
           cooldownUntil.current = performance.now() + COOLDOWN_MS;
         }
       }
@@ -385,10 +386,10 @@ const Home = () => {
         >
           <div className="pb-40 md:pb-36 w-full text-center">
             <GradientText
-              className="text-5xl md:text-8xl font-bold uppercase tracking-widest"
+              className="text-4xl md:text-7xl font-bold uppercase tracking-widest"
               colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
               animationSpeed={6}
-              style={{ fontFamily: "'Equinox', sans-serif" }}
+              style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
             >
               AI CUSTODI DELLE CENERI
             </GradientText>

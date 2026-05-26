@@ -187,7 +187,7 @@ const persons: PersonData[] = [
         platform: "artstation",
         url: "https://artstation.com/alterian",
       },
-      { platform: "behance", url: "#" },
+      { platform: "behance", url: "https://www.behance.net/alterian" },
       { platform: "email", url: "mailto:walterpilato02@gmail.com" },
     ],
   },
@@ -337,10 +337,10 @@ const DesktopBio = () => {
         style={pageTitleStyle}
       >
         <GradientText
-          className="text-3xl sm:text-4xl md:text-7xl font-bold uppercase tracking-widest"
+          className="text-2xl sm:text-3xl md:text-6xl font-bold uppercase tracking-widest"
           colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Equinox', sans-serif" }}
+          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
         >
           BIOGRAFIA
         </GradientText>
@@ -464,13 +464,12 @@ const DesktopBio = () => {
 
 const MobileBio = () => (
   <div>
-    <ScrollIndicator />
     <div className="pt-8 pb-4 text-center animate-fade-in-up">
       <GradientText
-        className="text-3xl sm:text-4xl font-bold uppercase tracking-widest"
+        className="text-2xl sm:text-3xl font-bold uppercase tracking-widest"
         colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
         animationSpeed={6}
-        style={{ fontFamily: "'Equinox', sans-serif" }}
+        style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
       >
         BIOGRAFIA
       </GradientText>
