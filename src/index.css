@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes border-build {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes border-build-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.border-build-bottom {
+  position: relative;
+  border-bottom-color: transparent !important;
+}
+.border-build-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: hsl(181 69% 44% / 0.3);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: border-build 1s ease-out forwards;
+  animation-delay: inherit;
+}
+
+.border-build-right {
+  position: relative;
+  border-right-color: transparent !important;
+}
+.border-build-right::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: hsl(181 69% 44% / 0.3);
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: border-build-y 1s ease-out forwards;
+  animation-delay: inherit;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;

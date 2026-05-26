@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-const ScrollIndicator = () => {
-  const [visible, setVisible] = useState(true);
+interface ScrollIndicatorProps {
+  visible?: boolean;
+}
+
+const ScrollIndicator = ({ visible: visibleProp }: ScrollIndicatorProps) => {
+  const [scrollVisible, setScrollVisible] = useState(true);
   const [centerX, setCenterX] = useState<number | null>(null);
   const mounted = useRef(true);
+  const controlled = visibleProp !== undefined;
 
   useEffect(() => {
     mounted.current = true;
@@ -17,8 +22,8 @@ const ScrollIndicator = () => {
     };
 
     const onScroll = () => {
-      const scrolled = mainEl.scrollTop;
-      setVisible(scrolled < 50);
+      if (controlled) return;
+      setScrollVisible(mainEl.scrollTop < 50);
     };
 
     updatePosition();
@@ -31,17 +36,19 @@ const ScrollIndicator = () => {
       resizeObs.disconnect();
       mainEl.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [controlled]);
 
   if (centerX === null) return null;
+
+  const isVisible = controlled ? visibleProp : scrollVisible;
 
   return (
     <div
       className="fixed z-50 text-muted-foreground transition-opacity duration-500"
       style={{
-        opacity: visible ? 1 : 0,
+        opacity: isVisible ? 1 : 0,
         pointerEvents: "none",
-        bottom: "2rem",
+        bottom: "max(2rem, env(safe-area-inset-bottom, 0px) + 1rem)",
         left: centerX,
         transform: "translateX(-50%)",
       }}

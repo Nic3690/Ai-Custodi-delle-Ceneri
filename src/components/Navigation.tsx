@@ -1,5 +1,6 @@
 import { Orbit, Fingerprint, ScrollText, Lock, Aperture, Radio } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { useLocation } from "react-router-dom";
 import LogoNaq from "@/assets/Logo_Naq.png";
 import {
   Sidebar,
@@ -23,6 +24,7 @@ const items = [
 
 export function Navigation() {
   const { open, setOpenMobile, isMobile } = useSidebar();
+  const { pathname } = useLocation();
 
   const handleLinkClick = () => {
     if (isMobile) {
@@ -32,8 +34,8 @@ export function Navigation() {
 
   return (
     <Sidebar className={open ? "w-64" : "w-24"} collapsible="icon">
-      <SidebarContent className="bg-background border-r border-primary/30">
-        <div className={`border-b border-primary/30 flex items-center h-20 ${open ? "px-6 justify-start gap-3" : "justify-center"}`}>
+      <SidebarContent className="bg-background border-r border-primary/30 border-build-right" key={pathname}>
+        <div className={`border-b border-primary/30 border-build-bottom flex items-center h-20 ${open ? "px-6 justify-start gap-3" : "justify-center"}`} style={{ animationDelay: "0.1s" }}>
           <img src={LogoNaq} alt="NAQ EVIUS Logo" className={`${open ? "h-8" : "h-6"}`} />
           {open && (
             <h2 className="font-bold text-primary text-2xl" style={{ fontFamily: "'Equinox', sans-serif" }}>
@@ -45,8 +47,8 @@ export function Navigation() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title} className={`border-b border-primary/30 py-4 ${!open ? "flex justify-center" : ""}`}>
+              {items.map((item, index) => (
+                <SidebarMenuItem key={item.title} className={`border-b border-primary/30 border-build-bottom py-4 ${!open ? "flex justify-center" : ""}`} style={{ animationDelay: `${0.2 + index * 0.1}s` } as React.CSSProperties}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}

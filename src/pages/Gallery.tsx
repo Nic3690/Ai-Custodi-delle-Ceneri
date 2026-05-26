@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import GradientText from "@/components/text/GradientText";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSnapScroll } from "@/hooks/use-snap-scroll";
 import { artworks, countTavole } from "@/data/artworks";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 function revealStyle(progress: number, start: number, end: number) {
   const t = Math.max(0, Math.min(1, (progress - start) / (end - start)));
@@ -13,56 +15,6 @@ function revealStyle(progress: number, start: number, end: number) {
     opacity: t,
     transform: `translateY(${30 * (1 - t)}px)`,
   };
-}
-
-function ScrollReveal({ children, className }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState({ opacity: 0, transform: "translateY(40px)" });
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const scrollEl = el.closest("main") || window;
-    let rafId: number | null = null;
-
-    const update = () => {
-      const rect = el.getBoundingClientRect();
-      const viewportH = scrollEl === window
-        ? window.innerHeight
-        : (scrollEl as HTMLElement).clientHeight;
-
-      const entry = rect.top / viewportH;
-      const progress = Math.max(0, Math.min(1, (1 - entry) / 0.5));
-
-      setStyle({
-        opacity: progress,
-        transform: `translateY(${40 * (1 - progress)}px)`,
-      });
-    };
-
-    const onScroll = () => {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        update();
-      });
-    };
-
-    scrollEl.addEventListener("scroll", onScroll, { passive: true });
-    update();
-
-    return () => {
-      scrollEl.removeEventListener("scroll", onScroll);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  return (
-    <div ref={ref} className={className} style={style}>
-      {children}
-    </div>
-  );
 }
 
 const GalleryCard = ({ storyArt }: { storyArt: typeof artworks[number] }) => {
@@ -93,7 +45,7 @@ const GalleryCard = ({ storyArt }: { storyArt: typeof artworks[number] }) => {
           {storyArt.story}
         </CardTitle>
         <CardDescription>
-          {storyArt.pieces.length} {storyArt.pieces.length === 1 ? "collaborazione" : "collaborazioni"}
+          {[...new Set(storyArt.pieces.flatMap(p => p.artists.map(a => a.name)))].join(", ")}
         </CardDescription>
       </CardHeader>
       <CardContent className="mt-auto">
@@ -116,80 +68,75 @@ const GalleryCard = ({ storyArt }: { storyArt: typeof artworks[number] }) => {
       {card}
     </Link>
   ) : (
-    <div className="opacity-70 cursor-not-allowed">
+    <div className="opacity-70 cursor-default">
       {card}
     </div>
   );
 };
 
+const GALLERY_SNAPS = [0, 0.5, 1.0];
+
 const DesktopGallery = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [subtitleStyle, setSubtitleStyle] = useState<React.CSSProperties>({ opacity: 0, transform: "translateY(30px)" });
-  const [cardsStyle, setCardsStyle] = useState<React.CSSProperties>({ opacity: 0, transform: "translateY(30px)" });
-  const [footerStyle, setFooterStyle] = useState<React.CSSProperties>({ opacity: 0, transform: "translateY(30px)" });
+  const [titleStyle, setTitleStyle] = useState<React.CSSProperties>({});
+  const [contentStyle, setContentStyle] = useState<React.CSSProperties>({
+    opacity: 0,
+    transform: "translateY(30px)",
+  });
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const scrollEl: HTMLElement | Window = container.closest("main") || window;
-    let rafId: number | null = null;
-
-    const update = () => {
-      const rect = container.getBoundingClientRect();
-      const viewportH =
-        scrollEl === window
-          ? window.innerHeight
-          : (scrollEl as HTMLElement).clientHeight;
-      const scrollable = container.offsetHeight - viewportH;
-      if (scrollable <= 0) return;
-      const scrolled = -rect.top;
-      const p = Math.max(0, Math.min(1, scrolled / scrollable));
-
-      setSubtitleStyle(revealStyle(p, 0, 0.15));
-      setCardsStyle(revealStyle(p, 0.1, 0.4));
-      setFooterStyle(revealStyle(p, 0.4, 0.6));
-    };
-
-    const onScroll = () => {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        update();
-      });
-    };
-
-    scrollEl.addEventListener("scroll", onScroll, { passive: true });
-    update();
-
-    return () => {
-      scrollEl.removeEventListener("scroll", onScroll);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-    };
-  }, []);
+  const snapIndex = useSnapScroll(containerRef, GALLERY_SNAPS, (p) => {
+    setTitleStyle(
+      p > 0.5 ? { opacity: Math.max(0, 1 - (p - 0.5) / 0.25) } : {}
+    );
+    setContentStyle(revealStyle(p, 0.5, 1.0));
+  }, { freeAfterLast: true, animBase: 500, animRate: 1200 });
 
   return (
-    <div ref={containerRef} style={{ height: "125vh" }}>
-      <div className="sticky top-0 h-screen-safe flex flex-col justify-center pt-16 bg-background px-6">
-        <div className="max-w-6xl mx-auto w-full">
-          <p className="text-center text-muted-foreground mb-12 text-lg" style={subtitleStyle}>
-            Interpretazioni visive ispirate agli scritti della saga.
-          </p>
+    <div ref={containerRef} className="relative cursor-default">
+      <ScrollIndicator visible={snapIndex === 0} />
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6" style={cardsStyle}>
-            {artworks.map((storyArt) => (
-              <GalleryCard key={storyArt.slug} storyArt={storyArt} />
-            ))}
-          </div>
+      {/* Title - absolute overlay, doesn't affect flow */}
+      <div
+        className="absolute inset-x-0 top-0 z-10 flex items-start justify-center pt-8 pointer-events-none transition-opacity duration-500"
+        style={{ height: "calc(100dvh - 5rem)", ...titleStyle }}
+      >
+        <GradientText
+          className="text-3xl sm:text-4xl md:text-7xl font-bold uppercase tracking-widest"
+          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          animationSpeed={6}
+          style={{ fontFamily: "'Equinox', sans-serif" }}
+        >
+          GALLERIA
+        </GradientText>
+      </div>
 
-          <div className="mt-16 text-center" style={footerStyle}>
-            <p className="text-lg text-card-foreground mb-4">
-              Vuoi contribuire con le tue opere?
+      {/* Content - normal flow, revealed by snap */}
+      <div style={contentStyle}>
+        <div className="pt-8 md:pt-16 px-6">
+          <div className="max-w-6xl mx-auto w-full">
+            <p className="text-center text-muted-foreground mb-6 md:mb-12 text-lg">
+              Interpretazioni visive ispirate agli scritti della saga.
             </p>
-            <Link to="/contacts" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
-              Contattami per collaborare
-            </Link>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {artworks.map((storyArt) => (
+                <GalleryCard key={storyArt.slug} storyArt={storyArt} />
+              ))}
+            </div>
           </div>
+        </div>
+
+        <div className="py-12 text-center px-6">
+          <p className="text-lg text-card-foreground mb-4">
+            Vuoi contribuire con le tue opere?
+          </p>
+          <Link
+            to="/contacts"
+            className="hover:opacity-80 transition-opacity"
+            style={{ color: "#ff5657" }}
+          >
+            Contattami per collaborare
+          </Link>
         </div>
       </div>
     </div>
@@ -216,34 +163,17 @@ const MobileGallery = () => (
       <p className="text-lg text-card-foreground mb-4">
         Vuoi contribuire con le tue opere?
       </p>
-      <Link to="/contacts" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
+      <Link
+        to="/contacts"
+        className="hover:opacity-80 transition-opacity"
+        style={{ color: "#ff5657" }}
+      >
         Contattami per collaborare
       </Link>
     </div>
   </div>
 );
 
-const Gallery = () => {
-  const isMobile = useIsMobile();
-
-  return (
-    <div>
-      <ScrollIndicator />
-
-      <div className="pt-8 md:pt-12 pb-4 text-center animate-fade-in-up">
-        <GradientText
-          className="text-3xl sm:text-4xl md:text-7xl font-bold uppercase tracking-widest"
-          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
-          animationSpeed={6}
-          style={{ fontFamily: "'Equinox', sans-serif" }}
-        >
-          GALLERIA
-        </GradientText>
-      </div>
-
-      {isMobile ? <MobileGallery /> : <DesktopGallery />}
-    </div>
-  );
-};
+const Gallery = () => <DesktopGallery />;
 
 export default Gallery;

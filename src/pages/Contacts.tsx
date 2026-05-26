@@ -45,7 +45,7 @@ const Contacts = () => {
             return (
               <Card
                 key={index}
-                className="bg-card border-border hover:border-primary transition-all duration-300 group"
+                className="bg-background border-border hover:border-primary transition-all duration-300 group relative z-[2]"
               >
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-2">

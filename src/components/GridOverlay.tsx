@@ -74,7 +74,10 @@ const GridOverlay = () => {
 
     const tick = () => {
       frameId = requestAnimationFrame(tick);
-      const s = main.scrollTop;
+      const snapP = main.dataset.snapProgress;
+      const s = snapP !== undefined
+        ? (parseFloat(snapP) > 0 ? FULL_REVEAL_PX : 0)
+        : main.scrollTop;
       if (s === lastScroll.current) return;
       lastScroll.current = s;
 
@@ -96,7 +99,7 @@ const GridOverlay = () => {
   }, [lines]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
       {lines.map((line, i) => {
         const isH = line.type === "h";
         return (
@@ -105,7 +108,7 @@ const GridOverlay = () => {
             ref={(el) => setRef(el, i)}
             className="absolute"
             style={{
-              backgroundColor: "hsl(181 69% 44% / 0.14)",
+              backgroundColor: "hsl(181 69% 44% / 0.22)",
               transition: "transform 1s ease-out",
               transform: isH ? "scaleX(0)" : "scaleY(0)",
               transformOrigin: line.origin,
