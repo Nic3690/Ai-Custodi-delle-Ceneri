@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import {
   User,
   Instagram,
@@ -458,4 +460,96 @@ const DesktopBio = () => {
   );
 };
 
-export default DesktopBio;
+// ─── Mobile Bio (simple scroll) ────────────────────────────────
+
+const MobileBio = () => (
+  <div>
+    <ScrollIndicator />
+    <div className="pt-8 pb-4 text-center animate-fade-in-up">
+      <GradientText
+        className="text-3xl sm:text-4xl font-bold uppercase tracking-widest"
+        colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+        animationSpeed={6}
+        style={{ fontFamily: "'Equinox', sans-serif" }}
+      >
+        BIOGRAFIA
+      </GradientText>
+    </div>
+
+    {persons.map((person, i) => (
+      <ScrollReveal key={i} className="px-4 py-8">
+        <p
+          className="text-sm leading-relaxed mb-4 text-center tracking-widest uppercase"
+          style={{ color: "#ff5657" }}
+        >
+          {person.title}
+        </p>
+        <PersonPhoto
+          src={person.photo}
+          alt={person.alt}
+          objectPosition={person.objectPosition}
+        />
+        <div className="mt-4 space-y-3">
+          {person.bio.map((paragraph, j) => (
+            <p key={j} className="text-sm leading-snug text-muted-foreground">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+        <div className="mt-4">
+          <SocialLinks links={person.socials} />
+        </div>
+      </ScrollReveal>
+    ))}
+
+    <ScrollReveal className="px-6 py-12">
+      <section className="mb-14">
+        <p
+          className="text-sm leading-relaxed mb-10 text-center tracking-widest uppercase"
+          style={{ color: "#ff5657" }}
+        >
+          Il Progetto
+        </p>
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <p className="text-base leading-relaxed text-muted-foreground">
+            {texts.t5} {texts.t6}
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto text-center space-y-12 pt-14">
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed text-muted-foreground">
+            <span className="italic">{texts.t7a}</span>
+            {texts.t7b}
+            <span className="italic">{texts.t7c}</span>
+          </p>
+          <p className="text-sm text-card-foreground">
+            <Link to="/stories" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
+              {texts.t7d}
+            </Link>
+          </p>
+        </div>
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed text-muted-foreground italic">
+            {texts.t8a}
+          </p>
+          <p className="text-sm text-card-foreground">
+            <Link to="/stories" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
+              {texts.t8b}
+            </Link>
+          </p>
+        </div>
+      </div>
+    </ScrollReveal>
+  </div>
+);
+
+// ─── Main export ────────────────────────────────────────────────
+
+const Bio = () => {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileBio /> : <DesktopBio />;
+};
+
+export default Bio;

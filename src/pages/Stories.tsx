@@ -198,6 +198,27 @@ const MobileStories = () => (
   </div>
 );
 
-const Stories = () => <DesktopStories />;
+const Stories = () => {
+  const isMobile = useIsMobile();
+
+  if (!isMobile) return <DesktopStories />;
+
+  return (
+    <div>
+      <ScrollIndicator />
+      <div className="pt-8 pb-4 text-center animate-fade-in-up">
+        <GradientText
+          className="text-3xl sm:text-4xl font-bold uppercase tracking-widest"
+          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          animationSpeed={6}
+          style={{ fontFamily: "'Equinox', sans-serif" }}
+        >
+          E-BOOK
+        </GradientText>
+      </div>
+      <MobileStories />
+    </div>
+  );
+};
 
 export default Stories;
