@@ -61,9 +61,9 @@ const StoryGallery = () => {
         <div className="text-center mb-4">
           <GradientText
             className="text-2xl md:text-4xl font-bold uppercase tracking-widest"
-            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+            colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
             animationSpeed={6}
-            style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
           >
             {story.story}
           </GradientText>

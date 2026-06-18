@@ -102,9 +102,9 @@ const DesktopGallery = () => {
       >
         <GradientText
           className="text-2xl sm:text-3xl md:text-6xl font-bold uppercase tracking-widest"
-          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
         >
           GALLERIA
         </GradientText>
@@ -133,7 +133,7 @@ const DesktopGallery = () => {
           <Link
             to="/contacts"
             className="hover:opacity-80 transition-opacity"
-            style={{ color: "#ff5657" }}
+            style={{ color: "#fe4a00" }}
           >
             Contattami per collaborare
           </Link>
@@ -166,7 +166,7 @@ const MobileGallery = () => (
       <Link
         to="/contacts"
         className="hover:opacity-80 transition-opacity"
-        style={{ color: "#ff5657" }}
+        style={{ color: "#fe4a00" }}
       >
         Contattami per collaborare
       </Link>
@@ -184,9 +184,9 @@ const Gallery = () => {
       <div className="pt-8 pb-4 text-center animate-fade-in-up">
         <GradientText
           className="text-2xl sm:text-3xl font-bold uppercase tracking-widest"
-          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
         >
           GALLERIA
         </GradientText>

@@ -66,7 +66,7 @@ const StoryCard = ({ story }: { story: Story }) => (
       )}
       <span
         className="absolute top-2 right-2 text-xs font-mono px-2 py-1 bg-background/80"
-        style={{ color: "#ff5657" }}
+        style={{ color: "#fe4a00" }}
       >
         Free Download
       </span>
@@ -76,7 +76,7 @@ const StoryCard = ({ story }: { story: Story }) => (
         <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors tracking-wider">
           {story.title}
         </CardTitle>
-        <FileText className="h-5 w-5 flex-shrink-0" style={{ color: "#ff5657" }} />
+        <FileText className="h-5 w-5 flex-shrink-0" style={{ color: "#fe4a00" }} />
       </div>
     </CardHeader>
     <CardContent className="flex-1 space-y-1 py-0">
@@ -148,9 +148,9 @@ const DesktopStories = () => {
       >
         <GradientText
           className="text-2xl sm:text-3xl md:text-6xl font-bold uppercase tracking-widest"
-          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
         >
           E-BOOK
         </GradientText>
@@ -208,9 +208,9 @@ const Stories = () => {
       <div className="pt-8 pb-4 text-center animate-fade-in-up">
         <GradientText
           className="text-2xl sm:text-3xl font-bold uppercase tracking-widest"
-          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+          colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
           animationSpeed={6}
-          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
         >
           E-BOOK
         </GradientText>

@@ -27,9 +27,9 @@ const Contacts = () => {
         <div className="text-center mb-6">
           <GradientText
             className="text-3xl md:text-5xl font-bold uppercase tracking-widest"
-            colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+            colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
             animationSpeed={6}
-            style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
           >
             CONTATTI
           </GradientText>
@@ -49,7 +49,7 @@ const Contacts = () => {
               >
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-2">
-                    <Icon className="h-8 w-8" style={{ color: '#ff5657' }} />
+                    <Icon className="h-8 w-8" style={{ color: '#fe4a00' }} />
                     <CardTitle className="text-xl font-bold">
                       {contact.title}
                     </CardTitle>
@@ -80,18 +80,18 @@ const Contacts = () => {
             Scrivimi
           </h2>
 
-          <p className="text-lg leading-relaxed mb-6" style={{ color: '#b7e2e5' }}>
+          <p className="text-lg leading-relaxed mb-6" style={{ color: '#7ED4C2' }}>
             Tutte le comunicazioni sono benvenute. Che tu sia un lettore, artista, editore o semplicemente curioso.
           </p>
         </div>
 
         <div className="p-8 md:p-12 text-center border-t border-border">
-          <Heart className="h-12 w-12 mx-auto mb-6" style={{ color: '#ff5657' }} />
+          <Heart className="h-12 w-12 mx-auto mb-6" style={{ color: '#fe4a00' }} />
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary">
             Sostieni il progetto
           </h2>
 
-          <p className="text-lg leading-relaxed mb-8" style={{ color: '#b7e2e5' }}>
+          <p className="text-lg leading-relaxed mb-8" style={{ color: '#7ED4C2' }}>
             Se ti piace quello che faccio, puoi supportare il progetto con una donazione libera.
           </p>
 
@@ -100,7 +100,7 @@ const Contacts = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button className="text-lg px-8 py-6" style={{ backgroundColor: '#ff5657' }}>
+            <Button className="text-lg px-8 py-6" style={{ backgroundColor: '#fe4a00' }}>
               <Heart className="mr-2 h-5 w-5" />
               Dona con PayPal
             </Button>

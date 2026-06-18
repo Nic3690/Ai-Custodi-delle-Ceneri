@@ -50,6 +50,7 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        'deep-teal': 'hsl(var(--deep-teal))',
         'neon-cyan': 'hsl(var(--neon-cyan))',
         'neon-magenta': 'hsl(var(--neon-magenta))',
         'neon-green': 'hsl(var(--neon-green))',

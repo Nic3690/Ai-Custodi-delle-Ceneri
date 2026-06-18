@@ -16,9 +16,9 @@ const Secret = () => {
 
             <GradientText
               className="text-lg sm:text-2xl md:text-4xl font-bold mb-4 md:mb-8 uppercase tracking-widest whitespace-nowrap"
-              colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
+              colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
               animationSpeed={6}
-              style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
+              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
             >
               [RICHIESTA RESPINTA]
             </GradientText>
@@ -28,14 +28,14 @@ const Secret = () => {
                 <Typewriter text="ACCESSO NEGATO" delay={300} eager={isMobile} />
               </p>
 
-              <div className="border-l-4 pl-6 text-left max-w-2xl mx-auto" style={{ borderColor: '#ff5657' }}>
-                <p className="text-lg mb-4" style={{ color: '#b7e2e5' }}>
+              <div className="border-l-4 pl-6 text-left max-w-2xl mx-auto" style={{ borderColor: '#fe4a00' }}>
+                <p className="text-lg mb-4" style={{ color: '#7ED4C2' }}>
                   <Typewriter text="Qualcosa di più grande sta arrivando." delay={1000} eager={isMobile} />
                 </p>
-                <p className="text-lg mb-4" style={{ color: '#b7e2e5' }}>
+                <p className="text-lg mb-4" style={{ color: '#7ED4C2' }}>
                   <Typewriter text="Non una storia. Non un avvertimento. Un mondo completo." delay={2500} eager={isMobile} />
                 </p>
-                <p className="text-lg" style={{ color: '#ff5657' }}>
+                <p className="text-lg" style={{ color: '#fe4a00' }}>
                   <Typewriter text="Un romanzo che renderà i racconti frammenti di una realtà più grande..." delay={4500} eager={isMobile} />
                 </p>
               </div>

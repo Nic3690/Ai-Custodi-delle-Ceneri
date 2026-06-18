@@ -1,7 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { ScrollReveal } from "@/components/ScrollReveal";
 import {
   User,
   Instagram,
@@ -11,10 +9,6 @@ import {
   Youtube,
   Mail,
 } from "lucide-react";
-import GradientText from "@/components/text/GradientText";
-import ScrollIndicator from "@/components/ScrollIndicator";
-
-import { useSnapScroll } from "@/hooks/use-snap-scroll";
 
 type SocialPlatform =
   | "instagram"
@@ -77,22 +71,16 @@ const platformLabels: Record<SocialPlatform, string> = {
   behance: "Behance",
 };
 
-const SocialLinks = ({
-  links,
-  style,
-}: {
-  links: SocialLink[];
-  style?: React.CSSProperties;
-}) => {
+const SocialLinks = ({ links }: { links: SocialLink[] }) => {
   if (links.length === 0) {
     return (
-      <p className="text-xs font-mono text-muted-foreground" style={style}>
+      <p className="text-sm font-mono text-muted-foreground">
         // link in arrivo
       </p>
     );
   }
   return (
-    <div className="flex gap-6" style={style}>
+    <div className="flex gap-6">
       {links.map((link, i) => {
         const Icon = socialIcons[link.platform];
         const label = platformLabels[link.platform];
@@ -106,42 +94,13 @@ const SocialLinks = ({
             aria-label={label}
             title={label}
           >
-            <Icon className="h-7 w-7" />
+            <Icon className="h-8 w-8" />
           </a>
         );
       })}
     </div>
   );
 };
-
-const PersonPhoto = ({
-  src,
-  alt,
-  objectPosition = "center",
-}: {
-  src: string | null;
-  alt: string;
-  objectPosition?: "top" | "center";
-}) => (
-  <div className="max-w-sm mx-auto md:max-w-none md:mx-0">
-    <div className="aspect-square overflow-hidden border border-border bg-muted rounded-lg">
-      {src ? (
-        <img
-          src={src}
-          alt={alt}
-          className={`w-full h-full object-cover ${
-            objectPosition === "top" ? "object-top" : "object-center"
-          }`}
-        />
-      ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
-          <User className="h-16 w-16 opacity-50" />
-          <span className="font-mono text-sm">// FOTO IN ARRIVO</span>
-        </div>
-      )}
-    </div>
-  </div>
-);
 
 interface PersonData {
   title: string;
@@ -223,333 +182,223 @@ const texts = {
   t8b: "— La grande pesca",
 };
 
-// ─── Reveal helpers ─────────────────────────────────────────────
+// ─── Slides ─────────────────────────────────────────────────────
 
-function revealStyle(progress: number, start: number, end: number) {
-  const t = Math.max(0, Math.min(1, (progress - start) / (end - start)));
-  return {
-    opacity: t,
-    transform: `translateY(${30 * (1 - t)}px)`,
-  };
-}
-
-function sectionOpacity(
-  p: number,
-  fadeInStart: number,
-  fadeInEnd: number,
-  fadeOutStart: number,
-  fadeOutEnd: number
-): number {
-  if (p <= fadeInStart) return 0;
-  if (p <= fadeInEnd)
-    return (p - fadeInStart) / (fadeInEnd - fadeInStart);
-  if (p <= fadeOutStart) return 1;
-  if (p <= fadeOutEnd)
-    return 1 - (p - fadeOutStart) / (fadeOutEnd - fadeOutStart);
-  return 0;
-}
-
-// ─── Desktop Bio (snap scroll) ─────────────────────────────────
-
-const BIO_SNAPS = [0, 1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8, 1];
-
-const sectionConfigs = [
-  { fadeInStart: 1/8, fadeInEnd: 2/8, fadeOutStart: 3/8, fadeOutEnd: 4/8, activeStart: 1/8, activeRange: 3/8 },
-  { fadeInStart: 3/8, fadeInEnd: 4/8, fadeOutStart: 5/8, fadeOutEnd: 6/8, activeStart: 3/8, activeRange: 3/8 },
-  { fadeInStart: 5/8, fadeInEnd: 6/8, fadeOutStart: 7/8, fadeOutEnd: 1, activeStart: 5/8, activeRange: 3/8 },
-];
-
-interface SectionStyles {
-  containerOpacity: number;
-  titleStyle: React.CSSProperties;
-  photoStyle: React.CSSProperties;
-  textStyle: React.CSSProperties;
-  socialsStyle: React.CSSProperties;
-}
-
-const HIDDEN_SECTION: SectionStyles = {
-  containerOpacity: 0,
-  titleStyle: { opacity: 0, transform: "translateY(30px)" },
-  photoStyle: { opacity: 0, transform: "translateY(30px)" },
-  textStyle: { opacity: 0, transform: "translateY(30px)" },
-  socialsStyle: { opacity: 0, transform: "translateY(30px)" },
-};
-
-function computeSectionStyles(globalP: number, cfg: typeof sectionConfigs[number]): SectionStyles {
-  const cOpacity = sectionOpacity(
-    globalP,
-    cfg.fadeInStart,
-    cfg.fadeInEnd,
-    cfg.fadeOutStart,
-    cfg.fadeOutEnd
-  );
-  if (cOpacity <= 0) return HIDDEN_SECTION;
-
-  const localP = Math.max(
-    0,
-    Math.min(1, (globalP - cfg.activeStart) / cfg.activeRange)
-  );
-
-  return {
-    containerOpacity: cOpacity,
-    titleStyle: revealStyle(localP, 0, 0.25),
-    photoStyle: revealStyle(localP, 0.05, 0.35),
-    textStyle: revealStyle(localP, 0.33, 0.55),
-    socialsStyle: revealStyle(localP, 0.45, 0.65),
-  };
-}
-
-const DesktopBio = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [pageTitleStyle, setPageTitleStyle] = useState<React.CSSProperties>({});
-  const [sections, setSections] = useState<SectionStyles[]>(
-    sectionConfigs.map(() => HIDDEN_SECTION)
-  );
-  const [projectStyle, setProjectStyle] = useState<React.CSSProperties>({
-    opacity: 0,
-    transform: "translateY(30px)",
-  });
-
-  const snapIndex = useSnapScroll(
-    containerRef,
-    BIO_SNAPS,
-    (p) => {
-      setPageTitleStyle(
-        p > 0.5/8 ? { opacity: Math.max(0, 1 - (p - 0.5/8) / (1/8)) } : {}
-      );
-      setSections(sectionConfigs.map((cfg) => computeSectionStyles(p, cfg)));
-      const projectP = Math.max(0, Math.min(1, (p - 7/8) / (1/8)));
-      setProjectStyle(revealStyle(projectP, 0, 0.8));
-    },
-    { animBase: 600, animRate: 1800 }
-  );
-
-  return (
-    <div
-      ref={containerRef}
-      className="h-full overflow-hidden relative cursor-default"
-      style={{ overscrollBehavior: "none" }}
-    >
-      <ScrollIndicator visible={snapIndex === 0} />
-
-      {/* Page title */}
-      <div
-        className="absolute inset-0 z-10 flex items-start justify-center pt-4 md:pt-8 pointer-events-none transition-opacity duration-500"
-        style={pageTitleStyle}
-      >
-        <GradientText
-          className="text-2xl sm:text-3xl md:text-6xl font-bold uppercase tracking-widest"
-          colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
-          animationSpeed={6}
-          style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
-        >
-          BIOGRAFIA
-        </GradientText>
-      </div>
-
-      {/* Person sections — overlaid */}
-      {persons.map((person, i) => (
-        <div
-          key={i}
-          className="absolute inset-0 flex items-start justify-center px-4 md:px-6 pt-10 md:pt-8"
-          style={{
-            opacity: sections[i].containerOpacity,
-            pointerEvents:
-              sections[i].containerOpacity > 0.1 ? "auto" : "none",
-          }}
-        >
-          <div className="max-w-5xl mx-auto w-full">
-            <p
-              className="text-sm md:text-base leading-relaxed mb-2 md:mb-10 text-center tracking-widest uppercase"
-              style={{ color: "#ff5657", ...sections[i].titleStyle }}
-            >
-              {person.title}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-10">
-              <div style={sections[i].photoStyle}>
-                <PersonPhoto
-                  src={person.photo}
-                  alt={person.alt}
-                  objectPosition={person.objectPosition}
-                />
-              </div>
-              <div className="flex flex-col h-full">
-                <div className="space-y-3 md:space-y-6" style={sections[i].textStyle}>
-                  {person.bio.map((paragraph, j) => (
-                    <p
-                      key={j}
-                      className="text-sm md:text-base leading-snug text-muted-foreground"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-                <div className="mt-auto pt-3 md:pt-6">
-                  <SocialLinks
-                    links={person.socials}
-                    style={sections[i].socialsStyle}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-
-      {/* Project info */}
-      <div
-        className="absolute inset-0 flex items-center justify-center px-6"
-        style={{
-          opacity: projectStyle.opacity,
-          pointerEvents:
-            Number(projectStyle.opacity) > 0.1 ? "auto" : "none",
-        }}
-      >
-        <div className="max-w-5xl mx-auto w-full">
-          <section className="mb-14">
-            <p
-              className="text-sm md:text-base leading-relaxed mb-10 text-center tracking-widest uppercase"
-              style={{ color: "#ff5657" }}
-            >
-              Il Progetto
-            </p>
-
-            <div className="max-w-4xl mx-auto text-center space-y-6">
-              <p className="text-base md:text-lg leading-relaxed text-muted-foreground">
-                {texts.t5} {texts.t6}
-              </p>
-            </div>
-          </section>
-
-          <div className="max-w-4xl mx-auto text-center space-y-12 pt-14">
-            <div className="space-y-4">
-              <p className="text-base md:text-lg leading-relaxed text-muted-foreground">
-                <span className="italic">{texts.t7a}</span>
-                {texts.t7b}
-                <span className="italic">{texts.t7c}</span>
-              </p>
-              <p className="text-sm text-card-foreground">
-                <Link
-                  to="/stories"
-                  className="hover:opacity-80 transition-opacity"
-                  style={{ color: "#ff5657" }}
-                >
-                  {texts.t7d}
-                </Link>
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <p className="text-base md:text-lg leading-relaxed text-muted-foreground italic">
-                {texts.t8a}
-              </p>
-              <p className="text-sm text-card-foreground">
-                <Link
-                  to="/stories"
-                  className="hover:opacity-80 transition-opacity"
-                  style={{ color: "#ff5657" }}
-                >
-                  {texts.t8b}
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ─── Mobile Bio (simple scroll) ────────────────────────────────
-
-const MobileBio = () => (
-  <div>
-    <div className="pt-8 pb-4 text-center animate-fade-in-up">
-      <GradientText
-        className="text-2xl sm:text-3xl font-bold uppercase tracking-widest"
-        colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
-        animationSpeed={6}
-        style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
-      >
-        BIOGRAFIA
-      </GradientText>
-    </div>
-
-    {persons.map((person, i) => (
-      <ScrollReveal key={i} className="px-4 py-8">
-        <p
-          className="text-sm leading-relaxed mb-4 text-center tracking-widest uppercase"
-          style={{ color: "#ff5657" }}
-        >
-          {person.title}
-        </p>
-        <PersonPhoto
+const PersonSlide = ({ person }: { person: PersonData }) => (
+  <div className="flex flex-col md:grid md:grid-cols-2 h-full">
+    {/* Photo — full height on the left */}
+    <div className="bg-muted h-2/5 md:h-full overflow-hidden">
+      {person.photo ? (
+        <img
           src={person.photo}
           alt={person.alt}
-          objectPosition={person.objectPosition}
+          className={`w-full h-full object-cover ${
+            person.objectPosition === "top" ? "object-top" : "object-center"
+          }`}
         />
-        <div className="mt-4 space-y-3">
-          {person.bio.map((paragraph, j) => (
-            <p key={j} className="text-sm leading-snug text-muted-foreground">
-              {paragraph}
-            </p>
-          ))}
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
+          <User className="h-16 w-16 opacity-50" />
+          <span className="font-mono text-base">// FOTO IN ARRIVO</span>
         </div>
-        <div className="mt-4">
-          <SocialLinks links={person.socials} />
-        </div>
-      </ScrollReveal>
-    ))}
+      )}
+    </div>
 
-    <ScrollReveal className="px-6 py-12">
-      <section className="mb-14">
+    {/* Text — right side */}
+    <div className="flex-1 md:flex-none flex flex-col justify-between gap-6 px-6 md:px-12 py-10 md:py-16 overflow-y-auto">
+      <p
+        className="text-lg md:text-2xl font-medium leading-relaxed tracking-widest uppercase"
+        style={{ color: "#41b4a0" }}
+      >
+        {person.title}
+      </p>
+      <div className="space-y-4">
+        {person.bio.map((paragraph, j) => (
+          <p
+            key={j}
+            className="text-base md:text-lg leading-snug text-foreground"
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+      <SocialLinks links={person.socials} />
+    </div>
+  </div>
+);
+
+const ProjectSlide = () => (
+  <div className="h-full flex items-center justify-center px-6 overflow-y-auto">
+    <div className="max-w-4xl mx-auto text-center py-10 space-y-10">
+      <div className="space-y-6">
         <p
-          className="text-sm leading-relaxed mb-10 text-center tracking-widest uppercase"
-          style={{ color: "#ff5657" }}
+          className="text-lg md:text-2xl font-medium leading-relaxed tracking-widest uppercase"
+          style={{ color: "#41b4a0" }}
         >
           Il Progetto
         </p>
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <p className="text-base leading-relaxed text-muted-foreground">
-            {texts.t5} {texts.t6}
-          </p>
-        </div>
-      </section>
+        <p className="text-base md:text-lg leading-relaxed text-foreground">
+          {texts.t5} {texts.t6}
+        </p>
+      </div>
 
-      <div className="max-w-4xl mx-auto text-center space-y-12 pt-14">
-        <div className="space-y-4">
-          <p className="text-base leading-relaxed text-muted-foreground">
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <p className="text-base md:text-lg leading-relaxed text-foreground">
             <span className="italic">{texts.t7a}</span>
             {texts.t7b}
             <span className="italic">{texts.t7c}</span>
           </p>
-          <p className="text-sm text-card-foreground">
-            <Link to="/stories" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
+          <p className="text-base text-card-foreground">
+            <Link
+              to="/stories"
+              className="hover:opacity-80 transition-opacity"
+              style={{ color: "#fe4a00" }}
+            >
               {texts.t7d}
             </Link>
           </p>
         </div>
-        <div className="space-y-4">
-          <p className="text-base leading-relaxed text-muted-foreground italic">
+
+        <div className="space-y-3">
+          <p className="text-base md:text-lg leading-relaxed text-foreground italic">
             {texts.t8a}
           </p>
-          <p className="text-sm text-card-foreground">
-            <Link to="/stories" className="hover:opacity-80 transition-opacity" style={{ color: "#ff5657" }}>
+          <p className="text-base text-card-foreground">
+            <Link
+              to="/stories"
+              className="hover:opacity-80 transition-opacity"
+              style={{ color: "#fe4a00" }}
+            >
               {texts.t8b}
             </Link>
           </p>
         </div>
       </div>
-    </ScrollReveal>
+    </div>
   </div>
 );
 
-// ─── Main export ────────────────────────────────────────────────
+// ─── Bio (locked viewport, cross-fade between slides) ───────────
+
+const COOLDOWN_MS = 900;
+const WHEEL_THRESHOLD = 30;
+const TOUCH_THRESHOLD = 50;
 
 const Bio = () => {
-  const isMobile = useIsMobile();
-  return isMobile ? <MobileBio /> : <DesktopBio />;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cooldownUntil = useRef(0);
+  const [index, setIndex] = useState(0);
+
+  const slides = [
+    ...persons.map((person, i) => <PersonSlide key={`person-${i}`} person={person} />),
+    <ProjectSlide key="project" />,
+  ];
+  const count = slides.length;
+
+  // Reveal the background grid (light)
+  useEffect(() => {
+    const main = document.querySelector("main");
+    if (main) main.dataset.snapProgress = "1";
+    return () => {
+      if (main) delete main.dataset.snapProgress;
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const go = (dir: number) =>
+      setIndex((c) => Math.max(0, Math.min(count - 1, c + dir)));
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      if (performance.now() < cooldownUntil.current) return;
+      if (Math.abs(e.deltaY) < WHEEL_THRESHOLD) return;
+      cooldownUntil.current = performance.now() + COOLDOWN_MS;
+      go(e.deltaY > 0 ? 1 : -1);
+    };
+
+    let touchStartY = 0;
+    let touchHandled = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      touchHandled = false;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (touchHandled) {
+        e.preventDefault();
+        return;
+      }
+      if (performance.now() < cooldownUntil.current) {
+        e.preventDefault();
+        return;
+      }
+      const dy = touchStartY - e.touches[0].clientY;
+      if (Math.abs(dy) > TOUCH_THRESHOLD) {
+        e.preventDefault();
+        touchHandled = true;
+        cooldownUntil.current = performance.now() + COOLDOWN_MS;
+        go(dy > 0 ? 1 : -1);
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [count]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="h-full overflow-hidden relative"
+      style={{ overscrollBehavior: "none" }}
+    >
+      {slides.map((slide, i) => (
+        <div
+          key={i}
+          className="absolute inset-0 transition-opacity duration-700 ease-out"
+          style={{
+            opacity: i === index ? 1 : 0,
+            pointerEvents: i === index ? "auto" : "none",
+          }}
+        >
+          {slide}
+        </div>
+      ))}
+
+      {/* Scroll-down arrow */}
+      <div
+        className="absolute inset-x-0 bottom-6 z-10 flex justify-center pointer-events-none transition-opacity duration-300"
+        style={{ opacity: index < count - 1 ? 1 : 0 }}
+      >
+        <svg
+          className="scroll-arrow"
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fe4a00"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="6 9 12 15 18 9" />
+          <polyline points="6 14 12 20 18 14" opacity="0.5" />
+        </svg>
+      </div>
+    </div>
+  );
 };
 
 export default Bio;

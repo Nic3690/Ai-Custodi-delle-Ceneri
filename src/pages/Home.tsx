@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import GradientText from "@/components/text/GradientText";
-import ScrollIndicator from "@/components/ScrollIndicator";
 import { useIsMobile } from "@/hooks/use-mobile";
+import logoTitle from "@/assets/logo-title.png";
 
 const textBlocks = [
   "Questa è una storia costruita per frammenti.",
@@ -24,10 +23,8 @@ const DESKTOP = {
   TEXT_ZONE_END: 0.68,
   CTA_START: 0.70,
   CTA_SOLID: 0.76,
-  VIDEO_REVERSE_START: 0.28,
-  VIDEO_REVERSE_END: 0.68,
-  SNAP_ANIM_BASE: 800,
-  SNAP_ANIM_RATE: 6000,
+  SNAP_ANIM_BASE: 500,
+  SNAP_ANIM_RATE: 2200,
 };
 
 const MOBILE = {
@@ -38,10 +35,8 @@ const MOBILE = {
   TEXT_ZONE_END: 0.70,
   CTA_START: 0.73,
   CTA_SOLID: 0.80,
-  VIDEO_REVERSE_START: 0.15,
-  VIDEO_REVERSE_END: 0.70,
-  SNAP_ANIM_BASE: 600,
-  SNAP_ANIM_RATE: 5000,
+  SNAP_ANIM_BASE: 450,
+  SNAP_ANIM_RATE: 2000,
 };
 
 function getTextStyle(
@@ -53,30 +48,33 @@ function getTextStyle(
 ) {
   const windowSize = (zoneEnd - zoneStart) / total;
   const start = zoneStart + index * windowSize;
-  const fadeInEnd = start + windowSize * 0.25;
-  const fadeOutStart = start + windowSize * 0.7;
+  const fadeInStart = start - windowSize * 0.25;
+  const fadeInEnd = start + windowSize * 0.45;
+  const fadeOutStart = start + windowSize * 0.6;
   const end = start + windowSize;
 
-  let opacity = 0;
-  let y = 30;
+  const TRAVEL = 100;
 
-  if (progress < start) {
+  let opacity = 0;
+  let y = -TRAVEL;
+
+  if (progress < fadeInStart) {
     opacity = 0;
-    y = 30;
+    y = -TRAVEL;
   } else if (progress < fadeInEnd) {
-    const t = (progress - start) / (fadeInEnd - start);
+    const t = (progress - fadeInStart) / (fadeInEnd - fadeInStart);
     opacity = t;
-    y = 30 * (1 - t);
+    y = -TRAVEL * (1 - t);
   } else if (progress < fadeOutStart) {
     opacity = 1;
     y = 0;
   } else if (progress < end) {
     const t = (progress - fadeOutStart) / (end - fadeOutStart);
     opacity = 1 - t;
-    y = -20 * t;
+    y = TRAVEL * t;
   } else {
     opacity = 0;
-    y = -20;
+    y = TRAVEL;
   }
 
   return { opacity, transform: `translateY(${y}px)` };
@@ -101,7 +99,7 @@ function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-const COOLDOWN_MS = 400;
+const COOLDOWN_MS = 150;
 const WHEEL_THRESHOLD = 30;
 const TOUCH_THRESHOLD = 50;
 
@@ -131,7 +129,7 @@ const Home = () => {
   );
   const [ctaOpacity, setCtaOpacity] = useState(0);
   const [videoOpacity, setVideoOpacity] = useState(1);
-  const [scrollIndicatorVisible, setScrollIndicatorVisible] = useState(true);
+  const [arrowOpacity, setArrowOpacity] = useState(1);
 
   const frameCount = isMobile ? FRAME_COUNT_MOBILE : FRAME_COUNT_DESKTOP;
   const framePath = isMobile
@@ -197,9 +195,6 @@ const Home = () => {
     animFrom.current = smoothProgress.current;
     animTo.current = points[index];
     animStartTime.current = performance.now();
-
-    if (index > 0) setScrollIndicatorVisible(false);
-    else setScrollIndicatorVisible(true);
   }, []);
 
   useEffect(() => {
@@ -286,15 +281,8 @@ const Home = () => {
       if (p <= c.VIDEO_FORWARD_END) {
         const vp = p / c.VIDEO_FORWARD_END;
         frameIndex = Math.min(fc - 1, Math.floor(vp * (fc - 1)));
-      } else if (p >= c.VIDEO_REVERSE_START && p <= c.VIDEO_REVERSE_END) {
-        const rp =
-          (p - c.VIDEO_REVERSE_START) /
-          (c.VIDEO_REVERSE_END - c.VIDEO_REVERSE_START);
-        frameIndex = Math.min(fc - 1, Math.floor((1 - rp) * (fc - 1)));
-      } else if (p > c.VIDEO_FORWARD_END && p < c.VIDEO_REVERSE_START) {
-        frameIndex = fc - 1;
       } else {
-        frameIndex = 0;
+        frameIndex = fc - 1;
       }
       drawFrame(frameIndex);
 
@@ -311,6 +299,13 @@ const Home = () => {
         setTitleOpacity(0);
       }
 
+      // Scroll-down arrow: visible through the intro (video + logo), fades as text begins
+      if (p < c.TEXT_ZONE_START) {
+        setArrowOpacity(1);
+      } else {
+        setArrowOpacity(Math.max(0, 1 - (p - c.TEXT_ZONE_START) / 0.02));
+      }
+
       setTextStyles(
         textBlocks.map((_, i) =>
           getTextStyle(
@@ -323,11 +318,10 @@ const Home = () => {
         )
       );
 
-      if (p >= c.VIDEO_REVERSE_END) {
+      if (p >= c.TITLE_SOLID) {
         const t = Math.max(
           0,
-          1 -
-            (p - c.VIDEO_REVERSE_END) / (c.CTA_START - c.VIDEO_REVERSE_END)
+          1 - (p - c.TITLE_SOLID) / (c.TEXT_ZONE_START - c.TITLE_SOLID)
         );
         setVideoOpacity(t);
       } else {
@@ -356,7 +350,6 @@ const Home = () => {
 
   return (
     <>
-      <ScrollIndicator visible={scrollIndicatorVisible} />
       <div
         ref={containerRef}
         className="relative w-full h-full overflow-hidden"
@@ -371,6 +364,15 @@ const Home = () => {
           className="absolute inset-0 pointer-events-none"
           style={{ background: "hsl(0 0% 8% / 0.35)" }}
         />
+        {/* Very light tint to bring the video toward the text color */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "hsl(var(--foreground))",
+            opacity: 0.08,
+            mixBlendMode: "soft-light",
+          }}
+        />
         <div
           className="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
           style={{
@@ -384,37 +386,70 @@ const Home = () => {
           className="absolute inset-0 z-10 flex items-end justify-center pointer-events-none px-4"
           style={{ opacity: titleOpacity }}
         >
-          <div className="pb-40 md:pb-36 w-full text-center">
-            <GradientText
-              className="text-4xl md:text-7xl font-bold uppercase tracking-widest"
-              colors={["#326266", "#23babd", "#b7e2e5", "#23babd", "#326266"]}
-              animationSpeed={6}
-              style={{ fontFamily: "'Bruno Ace SC', sans-serif" }}
-            >
-              AI CUSTODI DELLE CENERI
-            </GradientText>
+          <div className="pb-40 md:pb-36 w-full flex justify-center">
+            <div
+              role="img"
+              aria-label="AI Custodi delle Ceneri"
+              className="w-72 h-36 md:w-[36rem] md:h-72 animate-gradient"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, #164747, #41b4a0, #7ED4C2, #41b4a0, #164747)",
+                backgroundSize: "300% 100%",
+                WebkitMaskImage: `url(${logoTitle})`,
+                maskImage: `url(${logoTitle})`,
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+              }}
+            />
           </div>
+        </div>
+
+        {/* Scroll-down arrow: scroll cue through the intro */}
+        <div
+          className="absolute inset-x-0 z-10 flex justify-center pointer-events-none transition-opacity duration-300"
+          style={{
+            opacity: arrowOpacity,
+            bottom: "max(2rem, env(safe-area-inset-bottom, 0px) + 1rem)",
+          }}
+        >
+          <svg
+            className="scroll-arrow"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fe4a00"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+            <polyline points="6 14 12 20 18 14" opacity="0.5" />
+          </svg>
         </div>
 
         {/* Text blocks */}
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none pt-24 pb-16 md:pt-32 md:pb-0">
-          <div className="max-w-3xl mx-auto px-8 text-center">
-            {textBlocks.map((text, i) => (
+          {textBlocks.map((text, i) => (
+            <div
+              key={i}
+              className="absolute inset-0 flex items-center justify-center px-8"
+              style={textStyles[i]}
+            >
               <p
-                key={i}
-                className={`absolute inset-x-0 mx-auto max-w-3xl px-8 text-center ${
-                  i === 0
-                    ? "text-base md:text-lg leading-relaxed text-card-foreground"
-                    : i === textBlocks.length - 1
-                    ? "text-base md:text-lg leading-relaxed text-card-foreground coords"
-                    : "text-base md:text-lg leading-relaxed text-muted-foreground"
+                className={`max-w-3xl text-center text-2xl md:text-4xl leading-relaxed text-foreground ${
+                  i === textBlocks.length - 1 ? "coords" : ""
                 }`}
-                style={textStyles[i]}
               >
                 {text}
               </p>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         {/* CTA */}
@@ -425,7 +460,7 @@ const Home = () => {
           <Link
             to="/stories"
             className="text-2xl tracking-wide font-mono blink-cursor text-center hover:opacity-80 transition-opacity"
-            style={{ color: "#ff5657" }}
+            style={{ color: "#fe4a00" }}
           >
             Scopri gli E-Book
           </Link>

@@ -108,7 +108,7 @@ const GridOverlay = () => {
             ref={(el) => setRef(el, i)}
             className="absolute"
             style={{
-              backgroundColor: "hsl(181 69% 44% / 0.22)",
+              backgroundColor: "hsl(170 47% 48% / 0.1)",
               transition: "transform 1s ease-out",
               transform: isH ? "scaleX(0)" : "scaleY(0)",
               transformOrigin: line.origin,
