@@ -199,14 +199,15 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
     line-height: 1.7;
   }
 
   h1, h2, h3 {
     font-family: 'IBM Plex Sans', sans-serif;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    line-height: 1.1;
   }
 
   /* Space Mono (font-mono) is always uppercase wherever it's used */

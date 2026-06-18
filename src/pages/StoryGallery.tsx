@@ -4,7 +4,6 @@ import { ArrowLeft, Download, ExternalLink, User, ChevronLeft, ChevronRight, X }
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import GradientText from "@/components/text/GradientText";
 import { findStoryBySlug, countTavole } from "@/data/artworks";
 
 interface FlatTavola {
@@ -48,28 +47,21 @@ const StoryGallery = () => {
   const current = lightboxIndex !== null ? flat[lightboxIndex] : null;
 
   return (
-    <div className="container mx-auto px-4 py-12 md:py-16">
+    <div className="px-6 md:px-10 lg:px-16 py-12 md:py-20 relative z-[1]">
       <div className="max-w-6xl mx-auto">
         <Link
           to="/gallery"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 font-mono text-sm"
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-10 font-mono text-xs tracking-widest"
         >
           <ArrowLeft className="h-4 w-4" />
-          Torna alla Galleria
+          Torna alla galleria
         </Link>
 
-        <div className="text-center mb-4">
-          <GradientText
-            className="text-2xl md:text-4xl font-bold uppercase tracking-widest"
-            colors={["#164747", "#41b4a0", "#7ED4C2", "#41b4a0", "#164747"]}
-            animationSpeed={6}
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
-            {story.story}
-          </GradientText>
-        </div>
+        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-foreground">
+          {story.story}
+        </h1>
 
-        <p className="text-center text-muted-foreground mb-12 font-mono text-sm">
+        <p className="mt-4 mb-12 md:mb-16 font-mono text-sm text-muted-foreground">
           {total} {total === 1 ? "tavola" : "tavole"} · {story.pieces.length}{" "}
           {story.pieces.length === 1 ? "collaborazione" : "collaborazioni"}
         </p>
