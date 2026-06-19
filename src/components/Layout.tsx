@@ -35,8 +35,27 @@ export const Layout = ({ children }: LayoutProps) => {
     });
     lenisRef.current = lenis;
     let raf = 0;
+    let lastHeight = wrapper.scrollHeight;
     const loop = (time: number) => {
-      lenis.raf(time);
+      // Keep Lenis' scroll limit in sync with the real content height.
+      // We use the same element as wrapper AND content, so Lenis' internal
+      // ResizeObserver (which watches the wrapper's *box* size) never fires
+      // when the inner content grows — e.g. lazy <img> finishing to load.
+      // If we don't re-measure, the cached limit stays stale and scrolling
+      // silently locks up until a reload. Reading scrollHeight is cheap when
+      // nothing changed (no reflow), so this is safe every frame.
+      const height = wrapper.scrollHeight;
+      if (height !== lastHeight) {
+        lastHeight = height;
+        lenis.resize();
+      }
+      try {
+        lenis.raf(time);
+      } catch {
+        // A single bad frame must never kill the loop — otherwise Lenis keeps
+        // swallowing wheel events (preventDefault) while no longer scrolling,
+        // which would freeze the page until reload.
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
