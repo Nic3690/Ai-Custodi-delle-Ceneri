@@ -127,7 +127,7 @@ const Gallery = () => {
       />
 
       {/* Focus grid: hovered cover enlarges & lights up, the others dim */}
-      <div className="relative z-[1] max-w-6xl mx-auto px-6 md:px-10 min-h-screen flex items-center">
+      <div className="relative z-[1] max-w-6xl mx-auto px-6 md:px-10 pt-16 pb-32 md:py-0 md:min-h-screen md:flex md:items-center">
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 items-start gap-x-10 gap-y-12 md:gap-x-16 md:gap-y-16">
           {artworks.map((storyArt, i) => (
             <GalleryCard key={storyArt.slug} storyArt={storyArt} index={i} />
