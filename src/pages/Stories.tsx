@@ -23,7 +23,7 @@ const stories: Story[] = [
     annoStesura: "2022",
     primaEdizione: "2026",
     pages: "27 pagine",
-    image: "/images/la_grande_pesca.png",
+    image: "/images/la_grande_pesca.jpg",
     pdf: "/ebooks/la-grande-pesca.pdf",
     downloadFilename: "La Grande Pesca - Naq Evius.pdf",
   },

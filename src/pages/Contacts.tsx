@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import contactsHero from "@/assets/contacts-hero.png";
+import contactsHero from "@/assets/contacts-hero.jpg";
 import { ScrollRuler } from "@/components/ScrollRuler";
 import { RulerAxis } from "@/components/RulerAxis";
 import { MouseCoords } from "@/components/MouseCoords";

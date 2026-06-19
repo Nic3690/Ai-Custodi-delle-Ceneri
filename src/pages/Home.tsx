@@ -4,7 +4,7 @@ import { ScrollRuler } from "@/components/ScrollRuler";
 import { RulerAxis } from "@/components/RulerAxis";
 import { MouseCoords } from "@/components/MouseCoords";
 import { Timestamp } from "@/components/Timestamp";
-import introImg from "@/assets/intro.png";
+import introImg from "@/assets/intro.jpg";
 import logoTitle from "@/assets/logo-title.png";
 
 const textBlocks = [

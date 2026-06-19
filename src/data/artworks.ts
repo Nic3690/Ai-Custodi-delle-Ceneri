@@ -21,7 +21,7 @@ export const artworks: StoryArt[] = [
   {
     slug: "la-grande-pesca",
     story: "La Grande Pesca",
-    cover: "/images/tav_2.png",
+    cover: "/images/tav_2.jpg",
     pieces: [
       {
         title: "La prima collaborazione non si scorda mai",
