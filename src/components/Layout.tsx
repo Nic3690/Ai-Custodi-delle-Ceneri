@@ -19,6 +19,9 @@ export const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     const wrapper = mainRef.current;
     if (!wrapper) return;
+    // Smooth scroll only on devices with a fine pointer (desktop/mouse).
+    // On touch devices native scrolling is smoother and Lenis can cause jank.
+    if (!window.matchMedia("(pointer: fine)").matches) return;
     const lenis = new Lenis({
       wrapper,
       content: wrapper,

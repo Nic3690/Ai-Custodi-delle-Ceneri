@@ -6,6 +6,10 @@ import { MouseCoords } from "@/components/MouseCoords";
 import { Timestamp } from "@/components/Timestamp";
 import introImg from "@/assets/intro.jpg";
 import logoTitle from "@/assets/logo-title.png";
+import scatter1 from "@/assets/scatter-1.jpg";
+import scatter2 from "@/assets/scatter-2.jpg";
+import scatter3 from "@/assets/scatter-3.jpg";
+import scatter4 from "@/assets/scatter-4.jpg";
 
 const textBlocks = [
   "Questa è una storia costruita per frammenti.",
@@ -24,12 +28,58 @@ const smoothstep = (a: number, b: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
+const scatters = [
+  { src: scatter1, cls: "ml-[46%]" },
+  { src: scatter2, cls: "ml-[26%]" },
+  { src: scatter3, cls: "ml-[38%]" },
+  { src: scatter4, cls: "ml-[44%] md:ml-[62%]" },
+];
+
+// Scattered image: same size, dark overlay, gently grows as you scroll down.
+const ScatterImg = ({ src, className }: { src: string; className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    const scroller = el?.closest("main");
+    if (!el || !scroller) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight || 1;
+      const r = el.getBoundingClientRect();
+      const center = r.top + r.height / 2;
+      // 0 when at the bottom of the viewport, 1 near the top → grows as you scroll down
+      const p = Math.max(0, Math.min(1, (vh - center) / vh));
+      el.style.transform = `scale(${(1 + p * 0.45).toFixed(3)})`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className={`relative z-10 w-40 md:w-56 will-change-transform ${className ?? ""}`}
+      style={{ transformOrigin: "center" }}
+    >
+      <img src={src} alt="" loading="lazy" className="block w-full h-auto" />
+      <span className="pointer-events-none absolute inset-0 bg-black/20" />
+    </div>
+  );
+};
+
 const Home = () => {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const [titleOpacity, setTitleOpacity] = useState(0);
   const [heroOpacity, setHeroOpacity] = useState(1);
-  const [imgScale, setImgScale] = useState(1);
+  const [imgTransform, setImgTransform] = useState("scale(1)");
   const [scrollPercent, setScrollPercent] = useState(0);
   const lastPctRef = useRef(0);
 
@@ -55,7 +105,10 @@ const Home = () => {
       const scrollTop = scroller.scrollTop;
 
       const pPin = clamp01(scrollTop / pinPx);
-      setImgScale(1 + smoothstep(0, 1, pPin) * (MAX_ZOOM - 1));
+      const p = smoothstep(0, 1, pPin);
+      const s = 1 + p * (MAX_ZOOM - 1);
+      // pan the sphere (origin ~54% 46%) toward the center as it zooms
+      setImgTransform(`translate(${-4 * p}%, ${4 * p}%) scale(${s})`);
       setTitleOpacity(smoothstep(0.55, 0.98, pPin));
 
       // Hero scrolls away & fades after the pin; comes back scrolling up
@@ -140,8 +193,8 @@ const Home = () => {
             src={introImg}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover will-change-transform"
-            style={{ transform: `scale(${imgScale})`, transformOrigin: "center" }}
+            className="absolute inset-0 w-full h-full object-cover object-center will-change-transform"
+            style={{ transform: imgTransform, transformOrigin: "54% 46%" }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
@@ -219,8 +272,8 @@ const Home = () => {
         {textBlocks.slice(0, 5).map((text, i) => {
           const left = i % 2 === 0;
           return (
+            <div key={i}>
             <section
-              key={i}
               className="relative min-h-[80vh] flex items-center"
             >
               {/* horizontal connector: from the text across to the opposite vertical line */}
@@ -245,6 +298,10 @@ const Home = () => {
                 </div>
               </div>
             </section>
+            {scatters[i] && (
+              <ScatterImg src={scatters[i].src} className={scatters[i].cls} />
+            )}
+            </div>
           );
         })}
       </div>
