@@ -12,9 +12,11 @@ const items = [
 export function NavLinks({
   onNavigate,
   className,
+  activeClassName = "!text-foreground",
 }: {
   onNavigate?: () => void;
   className?: string;
+  activeClassName?: string;
 }) {
   return (
     <>
@@ -26,9 +28,9 @@ export function NavLinks({
           onClick={onNavigate}
           className={
             className ??
-            "text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+            "text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors"
           }
-          activeClassName="!text-foreground"
+          activeClassName={activeClassName}
         >
           {item.title}
         </NavLink>

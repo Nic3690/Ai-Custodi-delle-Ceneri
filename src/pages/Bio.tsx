@@ -9,6 +9,10 @@ import {
   Youtube,
   Mail,
 } from "lucide-react";
+import { ScrollRuler } from "@/components/ScrollRuler";
+import { RulerAxis } from "@/components/RulerAxis";
+import { MouseCoords } from "@/components/MouseCoords";
+import { Timestamp } from "@/components/Timestamp";
 
 type SocialPlatform =
   | "instagram"
@@ -73,14 +77,10 @@ const platformLabels: Record<SocialPlatform, string> = {
 
 const SocialLinks = ({ links }: { links: SocialLink[] }) => {
   if (links.length === 0) {
-    return (
-      <p className="text-sm font-mono text-muted-foreground">
-        // link in arrivo
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground">// link in arrivo</p>;
   }
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-8">
       {links.map((link, i) => {
         const Icon = socialIcons[link.platform];
         const label = platformLabels[link.platform];
@@ -90,11 +90,11 @@ const SocialLinks = ({ links }: { links: SocialLink[] }) => {
             href={link.url}
             target={link.platform === "email" ? undefined : "_blank"}
             rel={link.platform === "email" ? undefined : "noopener noreferrer"}
-            className="text-primary hover:text-primary/80 transition-colors"
+            className="text-accent hover:opacity-80 transition-colors"
             aria-label={label}
             title={label}
           >
-            <Icon className="h-8 w-8" />
+            <Icon className="h-4 w-4" />
           </a>
         );
       })}
@@ -138,14 +138,8 @@ const persons: PersonData[] = [
       "Romano, classe '99, segue una formazione artistica multiforme: passando dalla pittura al graphic design, decide infine di concentrarsi sull'illustrazione per il visual storytelling, nello specifico sulla progettazione e realizzazione di visual narrativi fantascientifici. Dimensione, quest'ultima, in cui trova il pieno della sua espressione artistica e professionale.",
     ],
     socials: [
-      {
-        platform: "instagram",
-        url: "https://www.instagram.com/pil_wal_art",
-      },
-      {
-        platform: "artstation",
-        url: "https://artstation.com/alterian",
-      },
+      { platform: "instagram", url: "https://www.instagram.com/pil_wal_art" },
+      { platform: "artstation", url: "https://artstation.com/alterian" },
       { platform: "behance", url: "https://www.behance.net/alterian" },
       { platform: "email", url: "mailto:walterpilato02@gmail.com" },
     ],
@@ -163,10 +157,7 @@ const persons: PersonData[] = [
         platform: "instagram",
         url: "https://www.instagram.com/colibri_servizieditoriali",
       },
-      {
-        platform: "email",
-        url: "mailto:colibriservizieditoriali@gmail.com",
-      },
+      { platform: "email", url: "mailto:colibriservizieditoriali@gmail.com" },
     ],
   },
 ];
@@ -178,225 +169,239 @@ const texts = {
   t7b: "bù",
   t7c: `, cioè 'no' in cinese."`,
   t7d: "— La grande pesca",
-  t8a: `"Si ricordò che era venuto fin lì non per vedere ciò che già sapeva, ma per andare oltre."`,
-  t8b: "— La grande pesca",
+  t8a: "«Cosa vedi intorno a te, adesso?» Bisogna trascinarlo via dai vecchi ricordi, il signor Gamper, altrimenti si perderà.",
+  t8b: "— La stazione del ritorno",
 };
 
-// ─── Slides ─────────────────────────────────────────────────────
+const MASK =
+  "linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent)";
 
-const PersonSlide = ({ person }: { person: PersonData }) => (
-  <div className="flex flex-col md:grid md:grid-cols-2 h-full">
-    {/* Photo — full height on the left */}
-    <div className="bg-muted h-2/5 md:h-full overflow-hidden">
-      {person.photo ? (
-        <img
-          src={person.photo}
-          alt={person.alt}
-          className={`w-full h-full object-cover ${
-            person.objectPosition === "top" ? "object-top" : "object-center"
-          }`}
-        />
-      ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
-          <User className="h-16 w-16 opacity-50" />
-          <span className="font-mono text-base">// FOTO IN ARRIVO</span>
-        </div>
-      )}
-    </div>
-
-    {/* Text — right side */}
-    <div className="flex-1 md:flex-none flex flex-col justify-between gap-6 px-6 md:px-12 py-10 md:py-16 overflow-y-auto">
-      <p
-        className="text-lg md:text-2xl font-medium leading-relaxed tracking-widest uppercase"
-        style={{ color: "#41b4a0" }}
-      >
-        {person.title}
-      </p>
-      <div className="space-y-4">
-        {person.bio.map((paragraph, j) => (
-          <p
-            key={j}
-            className="text-base md:text-lg leading-snug text-foreground"
-          >
-            {paragraph}
-          </p>
-        ))}
-      </div>
-      <SocialLinks links={person.socials} />
-    </div>
-  </div>
-);
-
-const ProjectSlide = () => (
-  <div className="h-full flex items-center justify-center px-6 overflow-y-auto">
-    <div className="max-w-4xl mx-auto text-center py-10 space-y-10">
-      <div className="space-y-6">
-        <p
-          className="text-lg md:text-2xl font-medium leading-relaxed tracking-widest uppercase"
-          style={{ color: "#41b4a0" }}
-        >
-          Il Progetto
-        </p>
-        <p className="text-base md:text-lg leading-relaxed text-foreground">
-          {texts.t5} {texts.t6}
-        </p>
-      </div>
-
-      <div className="space-y-8">
-        <div className="space-y-3">
-          <p className="text-base md:text-lg leading-relaxed text-foreground">
-            <span className="italic">{texts.t7a}</span>
-            {texts.t7b}
-            <span className="italic">{texts.t7c}</span>
-          </p>
-          <p className="text-base text-card-foreground">
-            <Link
-              to="/stories"
-              className="hover:opacity-80 transition-opacity"
-              style={{ color: "#fe4a00" }}
-            >
-              {texts.t7d}
-            </Link>
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          <p className="text-base md:text-lg leading-relaxed text-foreground italic">
-            {texts.t8a}
-          </p>
-          <p className="text-base text-card-foreground">
-            <Link
-              to="/stories"
-              className="hover:opacity-80 transition-opacity"
-              style={{ color: "#fe4a00" }}
-            >
-              {texts.t8b}
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// ─── Bio (locked viewport, cross-fade between slides) ───────────
-
-const COOLDOWN_MS = 900;
-const WHEEL_THRESHOLD = 30;
-const TOUCH_THRESHOLD = 50;
+// ─── Bio (E-book base: photos scroll left, info fixed right) ────
 
 const Bio = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cooldownUntil = useRef(0);
-  const [index, setIndex] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const [percent, setPercent] = useState(0);
+  const [active, setActive] = useState(0);
+  const [rightOpacity, setRightOpacity] = useState(1);
+  const lastPct = useRef(0);
+  const lastActive = useRef(0);
+  const lastOp = useRef(1);
 
-  const slides = [
-    ...persons.map((person, i) => <PersonSlide key={`person-${i}`} person={person} />),
-    <ProjectSlide key="project" />,
-  ];
-  const count = slides.length;
-
-  // Reveal the background grid (light)
   useEffect(() => {
-    const main = document.querySelector("main");
-    if (main) main.dataset.snapProgress = "1";
+    const scroller = rootRef.current?.closest("main");
+    if (!scroller) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const max = scroller.scrollHeight - scroller.clientHeight;
+      const p = max > 0 ? Math.round((scroller.scrollTop / max) * 100) : 0;
+      if (p !== lastPct.current) {
+        lastPct.current = p;
+        setPercent(p);
+      }
+      const vh = window.innerHeight || 1;
+      const vc = vh / 2;
+      // active = nearest person section (the project section is handled separately)
+      let best = 0;
+      let bestD = Infinity;
+      for (let i = 0; i < persons.length; i++) {
+        const el = sectionRefs.current[i];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - vc);
+        if (d < bestD) {
+          bestD = d;
+          best = i;
+        }
+      }
+      if (best !== lastActive.current) {
+        lastActive.current = best;
+        setActive(best);
+      }
+      // fade the right column near every transition (between people and into the project):
+      // full opacity while the active person's section is centred, fading out toward the edges
+      const op = Math.max(0, Math.min(1, (vh * 0.5 - bestD) / (vh * 0.2)));
+      const opR = Math.round(op * 100) / 100;
+      if (opR !== lastOp.current) {
+        lastOp.current = opR;
+        setRightOpacity(opR);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    update();
     return () => {
-      if (main) delete main.dataset.snapProgress;
+      scroller.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const go = (dir: number) =>
-      setIndex((c) => Math.max(0, Math.min(count - 1, c + dir)));
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (performance.now() < cooldownUntil.current) return;
-      if (Math.abs(e.deltaY) < WHEEL_THRESHOLD) return;
-      cooldownUntil.current = performance.now() + COOLDOWN_MS;
-      go(e.deltaY > 0 ? 1 : -1);
-    };
-
-    let touchStartY = 0;
-    let touchHandled = false;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      touchHandled = false;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (touchHandled) {
-        e.preventDefault();
-        return;
-      }
-      if (performance.now() < cooldownUntil.current) {
-        e.preventDefault();
-        return;
-      }
-      const dy = touchStartY - e.touches[0].clientY;
-      if (Math.abs(dy) > TOUCH_THRESHOLD) {
-        e.preventDefault();
-        touchHandled = true;
-        cooldownUntil.current = performance.now() + COOLDOWN_MS;
-        go(dy > 0 ? 1 : -1);
-      }
-    };
-
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    el.addEventListener("touchstart", handleTouchStart, { passive: true });
-    el.addEventListener("touchmove", handleTouchMove, { passive: false });
-
-    return () => {
-      el.removeEventListener("wheel", handleWheel);
-      el.removeEventListener("touchstart", handleTouchStart);
-      el.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [count]);
+  const cur = persons[Math.min(active, persons.length - 1)];
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full overflow-hidden relative"
-      style={{ overscrollBehavior: "none" }}
-    >
-      {slides.map((slide, i) => (
-        <div
-          key={i}
-          className="absolute inset-0 transition-opacity duration-700 ease-out"
-          style={{
-            opacity: i === index ? 1 : 0,
-            pointerEvents: i === index ? "auto" : "none",
-          }}
-        >
-          {slide}
-        </div>
-      ))}
+    <div ref={rootRef} className="relative w-full">
+      {/* HUD */}
+      <ScrollRuler percent={percent} />
+      <RulerAxis />
+      <MouseCoords />
+      <Timestamp />
 
-      {/* Scroll-down arrow */}
-      <div
-        className="absolute inset-x-0 bottom-6 z-10 flex justify-center pointer-events-none transition-opacity duration-300"
-        style={{ opacity: index < count - 1 ? 1 : 0 }}
-      >
-        <svg
-          className="scroll-arrow"
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#fe4a00"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
+      {/* Vertical grid lines */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 bottom-0 left-1/4 -translate-x-1/2 w-px bg-foreground/15 z-0"
+        style={{ WebkitMaskImage: MASK, maskImage: MASK }}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 bottom-0 left-[58%] w-px bg-foreground/15 z-0"
+        style={{ WebkitMaskImage: MASK, maskImage: MASK }}
+      />
+
+      {/* Fixed right: active person's info (hidden on the project section) */}
+      {rightOpacity > 0.01 && (
+        <div
+          className="hidden md:flex fixed left-[58%] right-8 top-0 h-full z-[1] items-center pl-10 pointer-events-none"
+          style={{ opacity: rightOpacity }}
         >
-          <polyline points="6 9 12 15 18 9" />
-          <polyline points="6 14 12 20 18 14" opacity="0.5" />
-        </svg>
+          <div key={active} className="max-w-sm w-full">
+            <h3
+              className="text-2xl md:text-3xl font-medium tracking-wide uppercase"
+              style={{ color: "#f2faef" }}
+            >
+              {cur.title}
+            </h3>
+            <div className="mt-5 space-y-4">
+              {cur.bio.map((paragraph, j) => (
+                <p
+                  key={j}
+                  className="text-base md:text-lg leading-relaxed text-foreground"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            <div className="mt-8 pointer-events-auto">
+              <SocialLinks links={cur.socials} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Left: person photos, scroll one at a time */}
+      <div className="md:w-1/2 relative z-[1]">
+        {persons.map((person, i) => (
+          <section
+            key={i}
+            ref={(el) => (sectionRefs.current[i] = el)}
+            className="min-h-screen flex flex-col md:flex-row items-center md:justify-center gap-8 px-6 md:px-10 py-16 md:py-0"
+          >
+            <div className="w-full max-w-sm md:w-auto md:max-w-none flex gap-4 md:gap-6 md:shrink-0">
+              <span className="hidden md:block font-mono text-xs text-muted-foreground pt-1 select-none">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div className="w-full md:w-auto aspect-[3/4] md:h-[62vh] overflow-hidden bg-muted">
+                {person.photo ? (
+                  <img
+                    src={person.photo}
+                    alt={person.alt}
+                    className={`w-full h-full object-cover ${
+                      person.objectPosition === "top"
+                        ? "object-top"
+                        : "object-center"
+                    }`}
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
+                    <User className="h-12 w-12 opacity-50" />
+                    <span className="text-xs">// foto in arrivo</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile-only info (desktop uses the fixed right column) */}
+            <div className="md:hidden w-full max-w-sm">
+              <h3
+                className="text-2xl font-medium tracking-wide uppercase"
+                style={{ color: "#f2faef" }}
+              >
+                {person.title}
+              </h3>
+              <div className="mt-4 space-y-3">
+                {person.bio.map((paragraph, j) => (
+                  <p
+                    key={j}
+                    className="text-base leading-relaxed text-foreground"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <div className="mt-6">
+                <SocialLinks links={person.socials} />
+              </div>
+            </div>
+          </section>
+        ))}
       </div>
+
+      {/* Project — full-width centered */}
+      <section
+        ref={(el) => (sectionRefs.current[persons.length] = el)}
+        className="min-h-screen flex flex-col md:flex-row md:items-center md:justify-between gap-12 md:gap-16 px-10 md:px-20 lg:px-28 py-24 relative z-[1]"
+      >
+        {/* left: intro */}
+        <div className="max-w-2xl space-y-8">
+          <p
+            className="text-base font-medium tracking-wide"
+            style={{ color: "#f2faef" }}
+          >
+            Il Progetto
+          </p>
+          <p className="text-2xl md:text-4xl leading-snug text-foreground">
+            {texts.t5} {texts.t6}
+          </p>
+        </div>
+
+        {/* right: quotes, right-aligned, smaller, italic */}
+        <div className="md:w-64 lg:w-72 md:shrink-0 space-y-10 text-right">
+          <div className="space-y-2">
+            <p className="text-base lg:text-lg italic leading-snug text-muted-foreground">
+              {texts.t7a}
+              <span className="not-italic">{texts.t7b}</span>
+              {texts.t7c}
+            </p>
+            <p className="text-xs text-card-foreground">
+              <Link
+                to="/stories"
+                className="hover:opacity-80 transition-opacity"
+                style={{ color: "#fe4a00" }}
+              >
+                {texts.t7d}
+              </Link>
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-base lg:text-lg italic leading-snug text-muted-foreground">
+              {texts.t8a}
+            </p>
+            <p className="text-xs text-card-foreground">
+              <Link
+                to="/stories"
+                className="hover:opacity-80 transition-opacity"
+                style={{ color: "#fe4a00" }}
+              >
+                {texts.t8b}
+              </Link>
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

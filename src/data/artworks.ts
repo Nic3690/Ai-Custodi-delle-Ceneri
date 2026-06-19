@@ -26,7 +26,7 @@ export const artworks: StoryArt[] = [
       {
         title: "La prima collaborazione non si scorda mai",
         artists: [
-          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art?igsh=d2J0dWNrN3kwMmx2" },
+          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art" },
         ],
         description: "",
         images: [
@@ -47,7 +47,7 @@ export const artworks: StoryArt[] = [
       {
         title: "",
         artists: [
-          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art?igsh=d2J0dWNrN3kwMmx2" },
+          { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art" },
           { name: "Luca Picone", link: "https://www.instagram.com/luca.zowie?igsh=MWx0Nm1pczFud2Fidg==" },
         ],
         description: "Due illustrazioni a quattro mani per un racconto breve",

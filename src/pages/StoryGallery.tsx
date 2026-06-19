@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
-import { ArrowLeft, Download, ExternalLink, User, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  ArrowLeft,
+  Download,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { findStoryBySlug, countTavole } from "@/data/artworks";
+import { ScrollRuler } from "@/components/ScrollRuler";
+import { MouseCoords } from "@/components/MouseCoords";
+import { Timestamp } from "@/components/Timestamp";
 
 interface FlatTavola {
   src: string;
@@ -18,10 +27,48 @@ const filename = (src: string): string => {
   return parts[parts.length - 1] || "tavola";
 };
 
+const MASK =
+  "linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent)";
+
 const StoryGallery = () => {
   const { slug } = useParams<{ slug: string }>();
   const story = findStoryBySlug(slug);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [percent, setPercent] = useState(0);
+  const lastPct = useRef(0);
+  const stripRef = useRef<HTMLDivElement>(null);
+
+  // Wheel -> horizontal scroll, and track horizontal scroll progress
+  useEffect(() => {
+    const el = stripRef.current;
+    if (!el) return;
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const max = el.scrollWidth - el.clientWidth;
+      const p = max > 0 ? Math.round((el.scrollLeft / max) * 100) : 0;
+      if (p !== lastPct.current) {
+        lastPct.current = p;
+        setPercent(p);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("scroll", onScroll, { passive: true });
+    measure();
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [slug]);
 
   if (!story) {
     return <Navigate to="/gallery" replace />;
@@ -37,6 +84,19 @@ const StoryGallery = () => {
   );
 
   const total = countTavole(story);
+  const quote = story.pieces.map((p) => p.title).find(Boolean);
+
+  const artists: { name: string; link: string }[] = [];
+  const seen = new Set<string>();
+  story.pieces.forEach((p) =>
+    p.artists.forEach((a) => {
+      if (!seen.has(a.name)) {
+        seen.add(a.name);
+        artists.push(a);
+      }
+    })
+  );
+
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
   const prevTavola = () =>
@@ -47,118 +107,115 @@ const StoryGallery = () => {
   const current = lightboxIndex !== null ? flat[lightboxIndex] : null;
 
   return (
-    <div className="px-6 md:px-10 lg:px-16 py-12 md:py-20 relative z-[1]">
-      <div className="max-w-6xl mx-auto">
+    <div className="h-full flex flex-col relative pt-14 md:pt-16 pb-14">
+      {/* HUD: horizontal progress bar + bottom readouts */}
+      <ScrollRuler percent={percent} horizontal />
+      <MouseCoords />
+      <Timestamp />
+
+      {/* Vertical grid lines, like the homepage */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 bottom-0 left-1/4 -translate-x-1/2 w-px bg-foreground/15 -z-10"
+        style={{ WebkitMaskImage: MASK, maskImage: MASK }}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 bottom-0 left-3/4 -translate-x-1/2 w-px bg-foreground/15 -z-10"
+        style={{ WebkitMaskImage: MASK, maskImage: MASK }}
+      />
+
+      {/* top: back + count */}
+      <div className="shrink-0 px-5 md:px-8 flex items-center justify-between">
         <Link
           to="/gallery"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-10 font-mono text-xs tracking-widest"
+          className="inline-flex items-center gap-2 text-accent hover:opacity-80 transition-colors text-xs tracking-widest"
         >
           <ArrowLeft className="h-4 w-4" />
           Torna alla galleria
         </Link>
+        <span className="font-mono text-[10px] md:text-xs text-muted-foreground">
+          {total} {total === 1 ? "tavola" : "tavole"}
+        </span>
+      </div>
 
-        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-foreground">
-          {story.story}
-        </h1>
+      {/* centered title */}
+      <h1 className="shrink-0 mt-10 md:mt-4 text-center font-mono font-light text-base md:text-lg tracking-wide uppercase text-foreground">
+        {story.story}
+      </h1>
 
-        <p className="mt-4 mb-12 md:mb-16 font-mono text-sm text-muted-foreground">
-          {total} {total === 1 ? "tavola" : "tavole"} · {story.pieces.length}{" "}
-          {story.pieces.length === 1 ? "collaborazione" : "collaborazioni"}
-        </p>
-
-        {total === 0 ? (
-          <div className="text-center py-16 border border-dashed border-border">
-            <p className="text-muted-foreground font-mono">// DATI IN ARRIVO</p>
-          </div>
-        ) : (
-          <div className="space-y-12">
-            {story.pieces.map((piece, pieceIndex) => {
-              if (piece.images.length === 0) return null;
-              return (
-                <section key={pieceIndex}>
-                  <Card className="bg-card border-border mb-6">
-                    <CardHeader>
-                      {piece.title && (
-                        <p className="text-sm italic text-muted-foreground">{piece.title}</p>
-                      )}
-                      {piece.description && (
-                        <p className="text-sm italic text-muted-foreground">{piece.description}</p>
-                      )}
-                    </CardHeader>
-                    <CardContent>
-                      {piece.artists.map((artist, artistIndex) => (
-                        <a
-                          key={artistIndex}
-                          href={artist.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-1 last:mb-0"
-                        >
-                          <User className="h-4 w-4" />
-                          <span>{artist.name}</span>
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      ))}
-                    </CardContent>
-                  </Card>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {piece.images.map((src, imageIndex) => {
-                      const flatIndex = flat.findIndex(
-                        (f) => f.pieceIndex === pieceIndex && f.imageIndex === imageIndex
-                      );
-                      return (
-                        <div
-                          key={imageIndex}
-                          className="group relative bg-muted border border-border hover:border-primary transition-all overflow-hidden"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => openLightbox(flatIndex)}
-                            className="block w-full aspect-square overflow-hidden"
-                            aria-label={`Apri tavola ${imageIndex + 1}`}
-                          >
-                            <img
-                              src={src}
-                              alt={`${piece.title} - tavola ${imageIndex + 1}`}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              loading="lazy"
-                            />
-                          </button>
-                          <a
-                            href={src}
-                            download={filename(src)}
-                            className="absolute bottom-2 right-2 p-2 bg-background/80 hover:bg-primary hover:text-primary-foreground transition-colors"
-                            aria-label="Scarica tavola"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Download className="h-4 w-4" />
-                          </a>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
-        )}
-
-        <div className="mt-16 text-center">
-          <p className="text-muted-foreground text-sm">
-            Tavole condivise secondo i termini della licenza Creative Commons CC BY-NC-ND 4.0.
+      {/* gallery block: caption stuck above the images, centered as a group */}
+      <div className="flex-1 min-h-0 flex flex-col justify-center gap-3">
+        {/* quote (left) + artists (right) — 50/50 on mobile */}
+        <div className="shrink-0 mt-8 md:mt-0 px-5 md:px-8 flex items-start justify-between gap-4 md:gap-8">
+        <div className="w-1/2 md:w-auto md:max-w-xs">
+          {quote && (
+            <p className="text-sm italic text-muted-foreground">«{quote}»</p>
+          )}
+          <p className="mt-1 font-mono text-[10px] text-muted-foreground/70">
+            CC BY-NC-ND 4.0
           </p>
+        </div>
+        <div className="w-1/2 md:w-auto flex flex-col items-end gap-1 text-right">
+          {artists.map((artist, i) => (
+            <a
+              key={i}
+              href={artist.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-accent hover:opacity-80 transition-colors"
+            >
+              {artist.name}
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          ))}
         </div>
       </div>
 
-      <Dialog open={lightboxIndex !== null} onOpenChange={(open) => !open && closeLightbox()}>
-        <DialogContent className="max-w-5xl p-0 bg-background border-primary/50 [&>button]:hidden">
+      {/* horizontal strip of tavole */}
+      {total === 0 ? (
+        <div className="shrink-0 text-center text-muted-foreground">
+          // dati in arrivo
+        </div>
+      ) : (
+        <div
+          ref={stripRef}
+          data-lenis-prevent
+          className="no-scrollbar shrink-0 min-h-0 flex items-center overflow-x-auto px-5 md:px-8"
+        >
+          {flat.map((tavola, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => openLightbox(i)}
+              className="group h-[52vh] aspect-[16/9] shrink-0 overflow-hidden bg-muted"
+              aria-label={`Apri tavola ${i + 1}`}
+            >
+              <img
+                src={tavola.src}
+                alt={`${story.story} - tavola ${i + 1}`}
+                className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                loading="lazy"
+                draggable={false}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+      </div>
+
+      {/* Lightbox */}
+      <Dialog
+        open={lightboxIndex !== null}
+        onOpenChange={(open) => !open && closeLightbox()}
+      >
+        <DialogContent className="max-w-[95vw] xl:max-w-[88vw] p-0 bg-background border-primary/50 [&>button]:hidden">
           {current && (
             <div className="relative">
               <img
                 src={current.src}
                 alt={current.pieceTitle}
-                className="w-full max-h-[80vh] object-contain bg-black"
+                className="w-full max-h-[88vh] object-contain bg-background"
               />
               <div className="absolute top-2 right-2 flex gap-2">
                 <Button
@@ -167,7 +224,11 @@ const StoryGallery = () => {
                   variant="ghost"
                   className="bg-background/80 hover:bg-primary hover:text-primary-foreground"
                 >
-                  <a href={current.src} download={filename(current.src)} aria-label="Scarica tavola">
+                  <a
+                    href={current.src}
+                    download={filename(current.src)}
+                    aria-label="Scarica tavola"
+                  >
                     <Download className="h-4 w-4" />
                   </a>
                 </Button>
@@ -204,7 +265,7 @@ const StoryGallery = () => {
                 </>
               )}
               <div className="p-4 border-t border-border">
-                <p className="font-mono text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {current.pieceTitle} · {lightboxIndex! + 1} / {flat.length}
                 </p>
               </div>

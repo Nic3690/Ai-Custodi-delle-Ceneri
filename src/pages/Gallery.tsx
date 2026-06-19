@@ -1,10 +1,31 @@
-import { ArrowRight, ImageIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { artworks, countTavole } from "@/data/artworks";
-import { ScrollReveal } from "@/components/ScrollReveal";
-import { PageHeader } from "@/components/PageHeader";
+import { ScrollRuler } from "@/components/ScrollRuler";
+import { RulerAxis } from "@/components/RulerAxis";
+import { MouseCoords } from "@/components/MouseCoords";
+import { Timestamp } from "@/components/Timestamp";
 
-const GalleryCard = ({ storyArt }: { storyArt: typeof artworks[number] }) => {
+const MASK =
+  "linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent)";
+
+// Irregular vertical offsets, one per cover (cycles if there are more)
+const OFFSETS = [
+  "md:mt-0",
+  "md:mt-44",
+  "md:mt-24",
+  "md:mt-64",
+  "md:mt-12",
+  "md:mt-52",
+];
+
+const GalleryCard = ({
+  storyArt,
+  index,
+}: {
+  storyArt: (typeof artworks)[number];
+  index: number;
+}) => {
   const tavoleCount = countTavole(storyArt);
   const hasContent = tavoleCount > 0;
   const artists = [
@@ -12,89 +33,109 @@ const GalleryCard = ({ storyArt }: { storyArt: typeof artworks[number] }) => {
   ].join(", ");
 
   const inner = (
-    <div className="group">
+    <>
       <div className="aspect-[4/3] bg-muted overflow-hidden relative">
         {storyArt.cover ? (
           <img
             src={storyArt.cover}
             alt={storyArt.story}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform ease-out group-hover:scale-125"
+            style={{ transitionDuration: "2500ms" }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground font-mono text-sm">
-            // dati in arrivo
+          <div className="w-full h-full flex items-center justify-center text-sm text-muted-foreground">
+            // in arrivo
           </div>
         )}
-        <span className="absolute top-3 right-3 text-xs font-mono px-2 py-1 bg-background/70 flex items-center gap-1 text-muted-foreground">
-          <ImageIcon className="h-3 w-3" />
-          {tavoleCount}
+        <span className="absolute top-3 left-3 font-mono text-xs text-foreground/70">
+          {String(index + 1).padStart(2, "0")}
         </span>
       </div>
-
-      <div className="mt-4">
-        <h3 className="text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors">
+      <div className="mt-3 flex items-baseline justify-between gap-3">
+        <h3 className="text-lg md:text-xl font-light uppercase tracking-wide text-foreground">
           {storyArt.story}
         </h3>
-        {artists && (
-          <p className="mt-1 text-sm text-muted-foreground">{artists}</p>
-        )}
-        {hasContent ? (
-          <span
-            className="mt-3 inline-flex items-center gap-2 text-sm font-mono transition-all group-hover:gap-3"
-            style={{ color: "#fe4a00" }}
-          >
-            Visualizza tavole
-            <ArrowRight className="h-4 w-4" />
-          </span>
-        ) : (
-          <span className="mt-3 inline-block text-sm font-mono text-muted-foreground">
-            In arrivo
-          </span>
-        )}
+        <span className="font-mono text-[10px] md:text-xs text-muted-foreground whitespace-nowrap">
+          {tavoleCount} {tavoleCount === 1 ? "tavola" : "tavole"}
+        </span>
       </div>
-    </div>
+      {artists && (
+        <p className="mt-1 text-sm text-muted-foreground">{artists}</p>
+      )}
+    </>
   );
 
+  const offset = OFFSETS[index % OFFSETS.length];
+  const cls = `group block ${offset}`;
+
   return hasContent ? (
-    <Link to={`/gallery/${storyArt.slug}`} className="block">
+    <Link to={`/gallery/${storyArt.slug}`} className={cls}>
       {inner}
     </Link>
   ) : (
-    <div className="opacity-60 cursor-default">{inner}</div>
+    <div className={`${cls} cursor-default`}>{inner}</div>
   );
 };
 
-const Gallery = () => (
-  <div className="pb-24 md:pb-32 relative z-[1]">
-    <PageHeader
-      kicker="02 — Galleria"
-      title="Galleria"
-      intro="Interpretazioni visive ispirate agli scritti della saga."
-    />
+const Gallery = () => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [percent, setPercent] = useState(0);
+  const lastPct = useRef(0);
 
-    <div className="max-w-6xl mx-auto w-full px-6 md:px-10 lg:px-16">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 md:gap-x-10 md:gap-y-16">
-        {artworks.map((storyArt) => (
-          <ScrollReveal key={storyArt.slug}>
-            <GalleryCard storyArt={storyArt} />
-          </ScrollReveal>
-        ))}
-      </div>
+  useEffect(() => {
+    const scroller = rootRef.current?.closest("main");
+    if (!scroller) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const max = scroller.scrollHeight - scroller.clientHeight;
+      const p = max > 0 ? Math.round((scroller.scrollTop / max) * 100) : 0;
+      if (p !== lastPct.current) {
+        lastPct.current = p;
+        setPercent(p);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
-      <div className="mt-24 md:mt-32 pt-10 border-t border-border/40 text-center">
-        <p className="text-base md:text-lg text-muted-foreground mb-3">
-          Vuoi contribuire con le tue opere?
-        </p>
-        <Link
-          to="/contacts"
-          className="hover:opacity-80 transition-opacity"
-          style={{ color: "#fe4a00" }}
-        >
-          Contattami per collaborare
-        </Link>
+  return (
+    <div ref={rootRef} className="relative w-full min-h-full">
+      {/* HUD */}
+      <ScrollRuler percent={percent} />
+      <RulerAxis />
+      <MouseCoords />
+      <Timestamp />
+
+      {/* Vertical grid lines */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 bottom-0 left-1/4 -translate-x-1/2 w-px bg-foreground/15 z-0"
+        style={{ WebkitMaskImage: MASK, maskImage: MASK }}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 bottom-0 left-3/4 -translate-x-1/2 w-px bg-foreground/15 z-0"
+        style={{ WebkitMaskImage: MASK, maskImage: MASK }}
+      />
+
+      {/* Focus grid: hovered cover enlarges & lights up, the others dim */}
+      <div className="relative z-[1] max-w-6xl mx-auto px-6 md:px-10 min-h-screen flex items-center">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 items-start gap-x-10 gap-y-12 md:gap-x-16 md:gap-y-16">
+          {artworks.map((storyArt, i) => (
+            <GalleryCard key={storyArt.slug} storyArt={storyArt} index={i} />
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Gallery;
