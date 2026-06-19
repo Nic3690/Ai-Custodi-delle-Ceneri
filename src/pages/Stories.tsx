@@ -32,7 +32,7 @@ const stories: Story[] = [
     description: "Rilascio previsto: luglio 2026",
     annoStesura: "—",
     primaEdizione: "—",
-    pages: "62 pagine",
+    pages: "25 pagine",
     image: null,
     pdf: null,
   },
