@@ -65,8 +65,8 @@ export const ScrollRuler = ({ percent, horizontal = false }: ScrollRulerProps) =
       {/* Horizontal ruler along the bottom (mobile, or forced via prop) */}
       <div
         className={`${
-          horizontal ? "" : "md:hidden"
-        } pointer-events-none fixed bottom-9 inset-x-6 z-20`}
+          horizontal ? "bottom-9 md:bottom-16" : "bottom-9 md:hidden"
+        } pointer-events-none fixed inset-x-6 z-20`}
       >
         <div className="relative w-full flex flex-row justify-between items-end h-4">
           {ticks.map((_, i) => {
