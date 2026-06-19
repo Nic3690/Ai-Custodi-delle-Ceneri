@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { HomeNav } from "./HomeNav";
 import GridOverlay from "./GridOverlay";
+import { useSeo } from "@/hooks/useSeo";
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,6 +14,8 @@ export const Layout = ({ children }: LayoutProps) => {
   const mainRef = useRef<HTMLElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const isHome = location.pathname === "/";
+
+  useSeo();
 
   // Smooth scrolling (Lenis) on the main scroller — the scroll-driven
   // animations read main.scrollTop, so they follow the smoothed scroll.
