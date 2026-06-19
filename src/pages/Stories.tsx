@@ -168,7 +168,7 @@ const Stories = () => {
           <section
             key={i}
             ref={(el) => (sectionRefs.current[i] = el)}
-            className={`md:min-h-[78vh] flex flex-col md:flex-row items-center md:justify-center gap-8 px-6 md:px-10 py-16 md:py-0 ${
+            className={`md:min-h-screen flex flex-col md:flex-row items-center md:justify-center gap-8 px-6 md:px-10 py-16 md:py-0 ${
               i < stories.length - 1 ? "border-b border-border/40" : ""
             }`}
           >
