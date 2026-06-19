@@ -139,7 +139,7 @@ const Stories = () => {
             <div className="mt-7">
               {cur.pdf ? (
                 <a
-                  href={cur.pdf}
+                  href={`${cur.pdf}?v=2`}
                   download={cur.downloadFilename}
                   className="pointer-events-auto inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs md:text-sm tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background"
                 >
@@ -207,7 +207,7 @@ const Stories = () => {
               <div className="mt-6 text-left">
                 {story.pdf ? (
                   <a
-                    href={story.pdf}
+                    href={`${story.pdf}?v=2`}
                     download={story.downloadFilename}
                     className="inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background"
                   >
