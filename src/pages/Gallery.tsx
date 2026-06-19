@@ -39,7 +39,7 @@ const GalleryCard = ({
           <img
             src={storyArt.cover}
             alt={storyArt.story}
-            className="w-full h-full object-cover transition-transform ease-out group-hover:scale-125"
+            className="w-full h-full object-cover transition-transform ease-out md:group-hover:scale-125"
             style={{ transitionDuration: "2500ms" }}
           />
         ) : (
