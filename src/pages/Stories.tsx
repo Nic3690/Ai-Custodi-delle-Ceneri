@@ -89,7 +89,7 @@ const Stories = () => {
   const cur = stories[active];
 
   return (
-    <div ref={rootRef} className="relative w-full pb-24">
+    <div ref={rootRef} className="relative w-full pb-24 md:pb-0">
       {/* HUD */}
       <ScrollRuler percent={percent} />
       <RulerAxis />
@@ -167,11 +167,16 @@ const Stories = () => {
         {stories.map((story, i) => (
           <section
             key={i}
-            ref={(el) => (sectionRefs.current[i] = el)}
-            className={`md:min-h-screen flex flex-col md:flex-row items-center md:justify-center gap-8 px-6 md:px-10 py-16 md:py-0 ${
-              i < stories.length - 1 ? "border-b border-border/40" : ""
-            }`}
+            className={
+              i < stories.length - 1
+                ? "md:h-[130vh] border-b border-border/40"
+                : "md:h-screen"
+            }
           >
+            <div
+              ref={(el) => (sectionRefs.current[i] = el)}
+              className="md:sticky md:top-0 md:h-screen flex flex-col md:flex-row items-center md:justify-center gap-8 px-6 md:px-10 py-16 md:py-0"
+            >
             <div className="w-full max-w-sm md:w-auto md:max-w-none flex gap-4 md:gap-6 md:shrink-0">
               {/* number — desktop only */}
               <span className="hidden md:block font-mono text-xs text-muted-foreground pt-1 select-none">
@@ -224,6 +229,7 @@ const Stories = () => {
               <p className="mt-6 text-lg leading-snug italic text-muted-foreground">
                 {story.description}
               </p>
+            </div>
             </div>
           </section>
         ))}
