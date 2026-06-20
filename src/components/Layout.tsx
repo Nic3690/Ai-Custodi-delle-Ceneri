@@ -80,6 +80,8 @@ export const Layout = ({ children }: LayoutProps) => {
           location.pathname !== "/bio" &&
           location.pathname !== "/contacts" &&
           location.pathname !== "/secret" &&
+          location.pathname !== "/privacy-policy" &&
+          location.pathname !== "/cookie-policy" &&
           !location.pathname.startsWith("/gallery") && <GridOverlay />}
         {children}
       </main>
