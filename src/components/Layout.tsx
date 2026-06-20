@@ -72,7 +72,7 @@ export const Layout = ({ children }: LayoutProps) => {
   }, [location.pathname]);
 
   return (
-    <div className="h-screen flex flex-col bg-background text-foreground">
+    <div className="h-dvh flex flex-col bg-background text-foreground">
       <main ref={mainRef} className="flex-1 overflow-auto min-h-0 relative">
         {!isHome &&
           location.pathname !== "/stories" &&
