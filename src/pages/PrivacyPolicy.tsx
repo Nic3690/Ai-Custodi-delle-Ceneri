@@ -12,8 +12,8 @@ const PrivacyPolicy = () => (
 
     <h2>Titolare del trattamento</h2>
     <p>
-      Il titolare del trattamento è <strong>Naq Evius</strong>, contattabile
-      all’indirizzo{" "}
+      Il titolare del trattamento è <strong>Alessio Salvati</strong> (in arte
+      Naq Evius), contattabile all’indirizzo{" "}
       <a href="mailto:aicustodidelleceneri@gmail.com">
         aicustodidelleceneri@gmail.com
       </a>
