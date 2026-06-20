@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { openCookieSettings } from "@/lib/consent";
 import contactsHero from "@/assets/contacts-hero.jpg";
 import { ScrollRuler } from "@/components/ScrollRuler";
 import { RulerAxis } from "@/components/RulerAxis";
@@ -175,6 +177,22 @@ const Contacts = () => {
             </p>
           </div>
         </section>
+
+        <footer className="mt-16 md:mt-20 pt-8 border-t border-border/40 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] md:text-xs tracking-[0.15em] uppercase text-muted-foreground">
+          <Link to="/privacy-policy" className="hover:text-foreground transition-colors">
+            Privacy Policy
+          </Link>
+          <Link to="/cookie-policy" className="hover:text-foreground transition-colors">
+            Cookie Policy
+          </Link>
+          <button
+            type="button"
+            onClick={openCookieSettings}
+            className="uppercase tracking-[0.15em] hover:text-foreground transition-colors"
+          >
+            Gestisci cookie
+          </button>
+        </footer>
       </div>
     </div>
   );

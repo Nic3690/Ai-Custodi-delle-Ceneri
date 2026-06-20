@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { HomeNav } from "./HomeNav";
 import GridOverlay from "./GridOverlay";
+import { CookieBanner } from "./CookieBanner";
 import { useSeo } from "@/hooks/useSeo";
 
 interface LayoutProps {
@@ -93,6 +94,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <div className="pointer-events-none fixed bottom-0 inset-x-0 h-32 z-10 bg-gradient-to-t from-background via-background/90 to-transparent" />
 
       <HomeNav />
+      <CookieBanner />
     </div>
   );
 };

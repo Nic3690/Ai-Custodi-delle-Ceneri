@@ -288,6 +288,37 @@ All colors MUST be HSL.
   }
 }
 
+@layer components {
+  .legal-content h2 {
+    @apply text-foreground text-lg md:text-xl font-medium mt-10 mb-3 uppercase tracking-wide;
+  }
+  .legal-content p {
+    @apply mb-1;
+  }
+  .legal-content a {
+    @apply text-accent underline underline-offset-2 transition-opacity hover:opacity-80;
+  }
+  .legal-content ul {
+    @apply list-disc pl-5 space-y-2;
+  }
+  .legal-content strong {
+    @apply text-foreground font-medium;
+  }
+  .legal-content code {
+    @apply font-mono text-xs text-foreground/90 bg-foreground/10 px-1 py-0.5 rounded;
+  }
+  .legal-content table {
+    @apply w-full text-xs md:text-sm border-collapse my-4;
+  }
+  .legal-content th,
+  .legal-content td {
+    @apply border border-border/50 px-3 py-2 text-left align-top;
+  }
+  .legal-content th {
+    @apply text-foreground font-medium;
+  }
+}
+
 @layer utilities {
   /* Hide scrollbar but keep scrolling */
   .no-scrollbar {
