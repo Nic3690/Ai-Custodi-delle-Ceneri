@@ -15,7 +15,7 @@ export const LegalLayout = ({
   updated: string;
   children: ReactNode;
 }) => (
-  <div className="min-h-full px-5 md:px-8 pt-16 md:pt-20 pb-32 md:pb-40 relative z-[1]">
+  <div className="min-h-full px-5 md:px-8 pt-16 md:pt-20 pb-48 md:pb-56 relative z-[1]">
     <MouseCoords />
     <Timestamp />
 

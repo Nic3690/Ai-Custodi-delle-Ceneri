@@ -2,7 +2,6 @@ import { ReactNode, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { HomeNav } from "./HomeNav";
-import GridOverlay from "./GridOverlay";
 import { CookieBanner } from "./CookieBanner";
 import { useSeo } from "@/hooks/useSeo";
 
@@ -74,15 +73,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="h-dvh flex flex-col bg-background text-foreground">
-      <main ref={mainRef} className="flex-1 overflow-auto min-h-0 relative">
-        {!isHome &&
-          location.pathname !== "/stories" &&
-          location.pathname !== "/bio" &&
-          location.pathname !== "/contacts" &&
-          location.pathname !== "/secret" &&
-          location.pathname !== "/privacy-policy" &&
-          location.pathname !== "/cookie-policy" &&
-          !location.pathname.startsWith("/gallery") && <GridOverlay />}
+      <main ref={mainRef} className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 relative">
         {children}
       </main>
 

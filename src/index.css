@@ -266,6 +266,9 @@ All colors MUST be HSL.
   #root {
     height: 100%;
     background-color: hsl(var(--background));
+    /* Evita la scrollbar orizzontale (e la sua fascia grigia in fondo, visibile
+       quando il sistema è impostato su "mostra sempre le barre"). */
+    overflow-x: hidden;
   }
 
   body {
@@ -804,8 +807,6 @@ All colors MUST be HSL.
     height: 100vh;
     height: 100dvh;
   }
-
-  /* Grid overlay — now handled by GridOverlay component */
 
   /* Underline animation */
   .link-underline {
