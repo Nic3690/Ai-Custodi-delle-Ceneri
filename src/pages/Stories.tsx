@@ -5,6 +5,12 @@ import { RulerAxis } from "@/components/RulerAxis";
 import { MouseCoords } from "@/components/MouseCoords";
 import { Timestamp } from "@/components/Timestamp";
 
+declare global {
+  interface Window {
+    clarity?: (...args: unknown[]) => void;
+  }
+}
+
 interface Story {
   title: string;
   description: string;
@@ -15,6 +21,13 @@ interface Story {
   pdf: string | null;
   downloadFilename?: string;
 }
+
+// Registra il download del PDF su Microsoft Clarity (evento filtrabile + tag col titolo)
+const trackDownload = (story: Story) => {
+  if (typeof window.clarity !== "function") return;
+  window.clarity("event", "ebook_download");
+  window.clarity("set", "ebook", story.title);
+};
 
 const stories: Story[] = [
   {
@@ -141,6 +154,7 @@ const Stories = () => {
                 <a
                   href={`${cur.pdf}?v=2`}
                   download={cur.downloadFilename}
+                  onClick={() => trackDownload(cur)}
                   className="pointer-events-auto inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs md:text-sm tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background"
                 >
                   <Download className="h-4 w-4" />
@@ -214,6 +228,7 @@ const Stories = () => {
                   <a
                     href={`${story.pdf}?v=2`}
                     download={story.downloadFilename}
+                    onClick={() => trackDownload(story)}
                     className="inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background"
                   >
                     <Download className="h-4 w-4" />
