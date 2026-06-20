@@ -266,6 +266,9 @@ All colors MUST be HSL.
   #root {
     height: 100%;
     background-color: hsl(var(--background));
+    /* Dichiara il sito come "scuro": evita che il browser (es. Chrome in
+       incognito) dipinga una sua fascia grigia di default in fondo. */
+    color-scheme: dark;
     /* Evita la scrollbar orizzontale (e la sua fascia grigia in fondo, visibile
        quando il sistema è impostato su "mostra sempre le barre"). */
     overflow-x: hidden;
