@@ -11,6 +11,7 @@ export const CursorLabel = ({ text = "scorri per esplorare" }: { text?: string }
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [hasMoved, setHasMoved] = useState(false);
+  const [overHeader, setOverHeader] = useState(false);
 
   // Desktop: the label trails the cursor.
   useEffect(() => {
@@ -19,6 +20,9 @@ export const CursorLabel = ({ text = "scorri per esplorare" }: { text?: string }
     const onMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       if (!hasMoved) setHasMoved(true);
+      // Hide the hint while the cursor is over the header band so it never
+      // overlaps the fixed nav (same z-index).
+      setOverHeader(clientY < 72);
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
@@ -77,7 +81,7 @@ export const CursorLabel = ({ text = "scorri per esplorare" }: { text?: string }
     <div
       ref={ref}
       className="pointer-events-none fixed left-0 top-0 z-30 will-change-transform"
-      style={{ opacity: visible && hasMoved ? 1 : 0, transition: "opacity 300ms ease" }}
+      style={{ opacity: visible && hasMoved && !overHeader ? 1 : 0, transition: "opacity 300ms ease" }}
     >
       <span className="block translate-x-4 translate-y-3">{label}</span>
     </div>
