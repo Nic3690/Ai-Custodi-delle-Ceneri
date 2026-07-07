@@ -254,7 +254,7 @@ const Stories = () => {
             </div>
 
             {/* Mobile-only info (desktop uses the fixed right column) */}
-            <div className="md:hidden w-full max-w-sm text-center">
+            <div className="md:hidden w-full max-w-sm text-left">
               <h3 className="text-2xl font-medium uppercase text-foreground">
                 {story.title}
               </h3>
@@ -266,7 +266,7 @@ const Stories = () => {
               <div className="mt-6 text-left">
                 <DownloadButtons story={story} />
               </div>
-              <p className="mt-6 text-lg leading-snug italic text-muted-foreground">
+              <p className="mt-6 text-center text-lg leading-snug italic text-muted-foreground">
                 {story.description}
               </p>
             </div>
