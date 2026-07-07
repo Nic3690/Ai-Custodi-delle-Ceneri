@@ -352,7 +352,7 @@ const Bio = () => {
       {/* Project — full-width centered */}
       <section
         ref={(el) => (sectionRefs.current[persons.length] = el)}
-        className="min-h-screen flex flex-col md:flex-row md:items-center md:justify-between gap-12 md:gap-16 px-10 md:px-20 lg:px-28 py-24 relative z-[1]"
+        className="min-h-screen flex flex-col md:flex-row md:items-center md:justify-between gap-12 md:gap-16 px-10 md:px-20 lg:px-28 pt-24 pb-32 md:py-24 relative z-[1]"
       >
         {/* left: intro */}
         <div className="max-w-2xl space-y-8">
