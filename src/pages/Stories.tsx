@@ -20,13 +20,54 @@ interface Story {
   image: string | null;
   pdf: string | null;
   downloadFilename?: string;
+  epub?: string | null;
+  epubFilename?: string;
 }
 
-// Registra il download del PDF su Microsoft Clarity (evento filtrabile + tag col titolo)
-const trackDownload = (story: Story) => {
+// Registra il download su Microsoft Clarity (evento filtrabile + tag titolo e formato)
+const trackDownload = (story: Story, format: "pdf" | "epub") => {
   if (typeof window.clarity !== "function") return;
   window.clarity("event", "ebook_download");
   window.clarity("set", "ebook", story.title);
+  window.clarity("set", "format", format);
+};
+
+// Pulsanti di download: PDF ed EPUB affiancati, oppure "In arrivo" se non disponibili.
+const DownloadButtons = ({ story }: { story: Story }) => {
+  if (!story.pdf) {
+    return (
+      <span className="inline-flex items-center gap-2 border border-border text-muted-foreground px-5 py-2.5 text-xs md:text-sm tracking-[0.2em] uppercase">
+        <Download className="h-4 w-4" />
+        In arrivo
+      </span>
+    );
+  }
+  const btn =
+    "pointer-events-auto inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs md:text-sm tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background";
+  return (
+    <div className="flex flex-wrap gap-3">
+      <a
+        href={`${story.pdf}?v=2`}
+        download={story.downloadFilename}
+        onClick={() => trackDownload(story, "pdf")}
+        className={btn}
+      >
+        <Download className="h-4 w-4" />
+        PDF
+      </a>
+      {story.epub && (
+        <a
+          href={`${story.epub}?v=2`}
+          download={story.epubFilename}
+          onClick={() => trackDownload(story, "epub")}
+          className={btn}
+        >
+          <Download className="h-4 w-4" />
+          EPUB
+        </a>
+      )}
+    </div>
+  );
 };
 
 const stories: Story[] = [
@@ -39,13 +80,27 @@ const stories: Story[] = [
     image: "/images/la_grande_pesca.jpg",
     pdf: "/ebooks/la-grande-pesca.pdf",
     downloadFilename: "La Grande Pesca - Naq Evius.pdf",
+    epub: "/ebooks/la-grande-pesca.epub",
+    epubFilename: "La Grande Pesca - Naq Evius.epub",
   },
   {
     title: "La Stazione del Ritorno",
-    description: "Rilascio previsto: luglio 2026",
+    description: `"«Cosa vedi intorno a te, adesso?» Bisogna trascinarlo via dai vecchi ricordi, il signor Gamper, altrimenti si perderà."`,
+    annoStesura: "2022",
+    primaEdizione: "2026",
+    pages: "25 pagine",
+    image: "/images/la_stazione_del_ritorno.jpg",
+    pdf: "/ebooks/la-stazione-del-ritorno.pdf",
+    downloadFilename: "La Stazione del Ritorno - Naq Evius.pdf",
+    epub: "/ebooks/la-stazione-del-ritorno.epub",
+    epubFilename: "La Stazione del Ritorno - Naq Evius.epub",
+  },
+  {
+    title: "Efren tra i lupi",
+    description: "",
     annoStesura: "—",
     primaEdizione: "—",
-    pages: "25 pagine",
+    pages: "—",
     image: null,
     pdf: null,
   },
@@ -150,22 +205,7 @@ const Stories = () => {
             </div>
 
             <div className="mt-7">
-              {cur.pdf ? (
-                <a
-                  href={`${cur.pdf}?v=2`}
-                  download={cur.downloadFilename}
-                  onClick={() => trackDownload(cur)}
-                  className="pointer-events-auto inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs md:text-sm tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background"
-                >
-                  <Download className="h-4 w-4" />
-                  Download
-                </a>
-              ) : (
-                <span className="inline-flex items-center gap-2 border border-border text-muted-foreground px-5 py-2.5 text-xs md:text-sm tracking-[0.2em] uppercase">
-                  <Download className="h-4 w-4" />
-                  In arrivo
-                </span>
-              )}
+              <DownloadButtons story={cur} />
             </div>
           </div>
 
@@ -224,22 +264,7 @@ const Stories = () => {
                 <p>Prima edizione — {story.primaEdizione}</p>
               </div>
               <div className="mt-6 text-left">
-                {story.pdf ? (
-                  <a
-                    href={`${story.pdf}?v=2`}
-                    download={story.downloadFilename}
-                    onClick={() => trackDownload(story)}
-                    className="inline-flex items-center gap-2 border border-accent text-accent px-5 py-2.5 text-xs tracking-[0.2em] uppercase transition-colors hover:bg-accent hover:text-background"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download
-                  </a>
-                ) : (
-                  <span className="inline-flex items-center gap-2 border border-border text-muted-foreground px-5 py-2.5 text-xs tracking-[0.2em] uppercase">
-                    <Download className="h-4 w-4" />
-                    In arrivo
-                  </span>
-                )}
+                <DownloadButtons story={story} />
               </div>
               <p className="mt-6 text-lg leading-snug italic text-muted-foreground">
                 {story.description}

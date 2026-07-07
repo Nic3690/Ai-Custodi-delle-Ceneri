@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ScrollRuler } from "@/components/ScrollRuler";
 import { RulerAxis } from "@/components/RulerAxis";
 import { MouseCoords } from "@/components/MouseCoords";
+import { CursorLabel } from "@/components/CursorLabel";
 import { Timestamp } from "@/components/Timestamp";
 import introImg from "@/assets/intro.jpg";
 import logoTitle from "@/assets/logo-title.png";
@@ -181,6 +182,7 @@ const Home = () => {
       <ScrollRuler percent={scrollPercent} />
       <RulerAxis />
       <MouseCoords />
+      <CursorLabel />
       <Timestamp />
 
       {/* Intro: pinned planet + logo, then scrolls away */}

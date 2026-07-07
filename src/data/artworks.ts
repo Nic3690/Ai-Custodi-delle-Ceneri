@@ -42,16 +42,19 @@ export const artworks: StoryArt[] = [
   {
     slug: "la-stazione-del-ritorno",
     story: "La Stazione del Ritorno",
-    cover: null,
+    cover: "/images/la_stazione_del_ritorno/IMG_0604.png",
     pieces: [
       {
-        title: "",
+        title: "Due illustrazioni a quattro mani per un racconto breve",
         artists: [
           { name: "Walter Pilato", link: "https://www.instagram.com/pil_wal_art" },
           { name: "Luca Picone", link: "https://www.instagram.com/luca.zowie?igsh=MWx0Nm1pczFud2Fidg==" },
         ],
         description: "Due illustrazioni a quattro mani per un racconto breve",
-        images: [],
+        images: [
+          "/images/la_stazione_del_ritorno/IMG_0604.png",
+          "/images/la_stazione_del_ritorno/IMG_0605.png",
+        ],
       },
     ],
   },

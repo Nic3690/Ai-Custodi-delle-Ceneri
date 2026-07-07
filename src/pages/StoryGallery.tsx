@@ -140,7 +140,7 @@ const StoryGallery = () => {
       </div>
 
       {/* centered title */}
-      <h1 className="shrink-0 mt-10 md:mt-4 text-center font-mono font-light text-base md:text-lg tracking-wide uppercase text-foreground">
+      <h1 className="shrink-0 mt-10 md:mt-4 text-center font-light text-base md:text-lg tracking-wide uppercase text-foreground">
         {story.story}
       </h1>
 

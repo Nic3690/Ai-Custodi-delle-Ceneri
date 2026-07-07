@@ -40,8 +40,8 @@ const Secret = () => {
           style={{ color: "#fe4a00" }}
         >
           <span>[RICHIESTA RESPINTA]</span>
-          <ScanBars />
-          <InitCounter />
+          <ScanBars count={10} fill={0.1} />
+          <InitCounter max={10} />
         </div>
 
         <h1 className="text-4xl md:text-6xl font-normal tracking-tight uppercase text-foreground mb-10">
