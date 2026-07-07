@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 /**
- * Small label that trails the cursor inside the hero. Fades out as soon as the
- * page is scrolled away from the top and does not come back.
+ * Hint shown inside the hero. On desktop it trails the cursor; on mobile (no
+ * cursor) it sits static a bit below center. In both cases it fades out as soon
+ * as the page is scrolled away from the top and does not come back.
  */
 export const CursorLabel = ({ text = "scorri per esplorare" }: { text?: string }) => {
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [hasMoved, setHasMoved] = useState(false);
 
+  // Desktop: the label trails the cursor.
   useEffect(() => {
+    if (isMobile) return;
     let raf = 0;
     const onMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
@@ -26,7 +31,7 @@ export const CursorLabel = ({ text = "scorri per esplorare" }: { text?: string }
       window.removeEventListener("mousemove", onMove);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [hasMoved]);
+  }, [hasMoved, isMobile]);
 
   // Show only while near the top of the page (the hero); hide once scrolled.
   useEffect(() => {
@@ -49,15 +54,32 @@ export const CursorLabel = ({ text = "scorri per esplorare" }: { text?: string }
     };
   }, []);
 
+  const label = (
+    <span className="whitespace-nowrap font-mono text-[11px] md:text-xs uppercase tracking-widest text-foreground/70">
+      [ {text} ]
+    </span>
+  );
+
+  // Mobile: no cursor to follow — static, a bit below center.
+  if (isMobile) {
+    return (
+      <div
+        ref={ref}
+        className="pointer-events-none fixed left-1/2 top-[62%] -translate-x-1/2 z-30 text-center"
+        style={{ opacity: visible ? 1 : 0, transition: "opacity 400ms ease" }}
+      >
+        {label}
+      </div>
+    );
+  }
+
   return (
     <div
       ref={ref}
       className="pointer-events-none fixed left-0 top-0 z-30 will-change-transform"
       style={{ opacity: visible && hasMoved ? 1 : 0, transition: "opacity 300ms ease" }}
     >
-      <span className="block translate-x-4 translate-y-3 whitespace-nowrap font-mono text-[10px] md:text-xs uppercase tracking-widest text-foreground/70">
-        [ {text} ]
-      </span>
+      <span className="block translate-x-4 translate-y-3">{label}</span>
     </div>
   );
 };
