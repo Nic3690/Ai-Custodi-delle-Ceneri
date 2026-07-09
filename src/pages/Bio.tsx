@@ -138,7 +138,7 @@ const persons: PersonData[] = [
       "Romano, classe '99, segue una formazione artistica multiforme: passando dalla pittura al graphic design, decide infine di concentrarsi sull'illustrazione per il visual storytelling, nello specifico sulla progettazione e realizzazione di visual narrativi fantascientifici. Dimensione, quest'ultima, in cui trova il pieno della sua espressione artistica e professionale.",
     ],
     socials: [
-      { platform: "instagram", url: "https://www.instagram.com/pil_wal_art" },
+      { platform: "instagram", url: "https://www.instagram.com/alteriandesign" },
       { platform: "artstation", url: "https://artstation.com/alterian" },
       { platform: "behance", url: "https://www.behance.net/alterian" },
       { platform: "email", url: "mailto:walterpilato02@gmail.com" },

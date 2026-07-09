@@ -47,7 +47,7 @@ const DownloadButtons = ({ story }: { story: Story }) => {
   return (
     <div className="flex flex-wrap gap-3">
       <a
-        href={`${story.pdf}?v=2`}
+        href={`${story.pdf}?v=3`}
         download={story.downloadFilename}
         onClick={() => trackDownload(story, "pdf")}
         className={btn}
@@ -57,7 +57,7 @@ const DownloadButtons = ({ story }: { story: Story }) => {
       </a>
       {story.epub && (
         <a
-          href={`${story.epub}?v=2`}
+          href={`${story.epub}?v=3`}
           download={story.epubFilename}
           onClick={() => trackDownload(story, "epub")}
           className={btn}
