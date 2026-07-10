@@ -27,7 +27,7 @@ interface Story {
 // Registra il download su Microsoft Clarity (evento filtrabile + tag titolo e formato)
 const trackDownload = (story: Story, format: "pdf" | "epub") => {
   if (typeof window.clarity !== "function") return;
-  window.clarity("event", "ebook_download");
+  window.clarity("event", `ebook_download_${format}`);
   window.clarity("set", "ebook", story.title);
   window.clarity("set", "format", format);
 };
